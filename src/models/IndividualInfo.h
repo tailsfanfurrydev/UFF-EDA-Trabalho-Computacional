@@ -1,6 +1,5 @@
 #ifndef INDIVIDUAL_INFO_H
 #define INDIVIDUAL_INFO_H
-
 #include "../../libs/LinkedList.h"
 
 typedef struct {

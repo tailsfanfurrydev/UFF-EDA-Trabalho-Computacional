@@ -1,42 +1,62 @@
 #include "YearInfo.h"
+#include "ChampionshipInfo.h"
+#include "../../libs/GenericTypes.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-
-
-YearInfo* yearInfoCreate(uint16_t year, const char* champion, const char* runnerUp, uint8_t titleNumber, const char* theme, const char* carnivalDesigner) {
+YearInfo* yearInfoCreate(uint16_t year) {
     YearInfo* info = (YearInfo*)malloc(sizeof(YearInfo));
     if (!info) return NULL;
     
     info->year = year;
-    info->titleNumber = titleNumber;
-
-    strncpy(info->champion, champion, 255);
-    info->champion[255] = '\0';
-    strncpy(info->runnerUp, runnerUp, 255);
-    info->runnerUp[255] = '\0';
-    strncpy(info->theme, theme, 255);
-    info->theme[255] = '\0';
-    
-    strncpy(info->carnivalDesigner, carnivalDesigner, 255);
-    info->carnivalDesigner[255] = '\0';
+    info->champions = linkedListInitialize();
+    info->runnersUp = linkedListInitialize();
     
     return info;
 }
+
 void yearInfoFree(YearInfo* info) {
-    if (info) free(info);
-}
-void yearInfoPrint(YearInfo* info) {
     if (info) {
-        printf("\n=== carnaval %d ===\n", info->year);
-        printf("campea: %s (%dº título)\n", info->champion, info->titleNumber);
-        printf("vice campea: %s\n", info->runnerUp);
-        printf("enredo: %s\n", info->theme);
-        printf("carnavalesco: %s\n", info->carnivalDesigner);
+        linkedListFree(info->champions, (FreeFunc)championshipInfoFree);
+        linkedListFree(info->runnersUp, (FreeFunc)championshipInfoFree);
+        free(info);
     }
 }
+
+void yearInfoPrint(YearInfo* info) {
+    if (!info) return;
+    
+    printf("\n=== carnaval %d ===\n", info->year);
+    
+    int championCount = linkedListSize(info->champions);
+    int runnerUpCount = linkedListSize(info->runnersUp);
+    
+    printf("campeoes: %d\n", championCount);
+    if (championCount > 0) {
+        linkedListPrint(info->champions, (PrintFunc)championshipInfoPrint);
+    }
+    printf("\nvices: %d\n", runnerUpCount);
+    if (runnerUpCount > 0) {
+        linkedListPrint(info->runnersUp, (PrintFunc)championshipInfoPrint);
+    }
+    
+    printf("\n");
+}
+
 int yearInfoCompare(YearInfo* a, YearInfo* b) {
     if (!a || !b) return 0;
     return (int)a->year - (int)b->year;
+}
+
+void yearInfoAddChampion(YearInfo* info, void* championshipInfo) {
+    if (info && championshipInfo) {
+        info->champions = linkedListInsert(info->champions, championshipInfo);
+    }
+}
+
+void yearInfoAddRunnerUp(YearInfo* info, void* championshipInfo) {
+    if (info && championshipInfo) {
+        info->runnersUp = linkedListInsert(info->runnersUp, championshipInfo);
+    }
 }
