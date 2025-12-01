@@ -1,12 +1,7 @@
-
-#ifndef B_PLUS_TREE_2_M_C
-#define B_PLUS_TREE_2_M_C
-
 #include "BPlusTree2M.h"
 #include <string.h>
 #include "BPlusStorage.h"
 #include <stdlib.h>
-
 
 BPlusTree2M *bPlusTreeCreate2M(int t){
   if(t<=0){
@@ -18,25 +13,24 @@ BPlusTree2M *bPlusTreeCreate2M(int t){
     printf("malloc error in bPlusTreeCreate2M");
     exit(1);
   }
-  
 
   new->t = t;
   new->numKeys = 0;
   new->key =(int*)malloc(sizeof(int)*((t*2)-1));
-  new->isLeafsParent = 1;                                
+  new->isLeafsParent = 1;
   new->childOffsets = (long*) malloc(sizeof(long)*2*t);
 
   int i;
   for(i=0; i<(t*2); i++) new->childOffsets[i] = LONG_MAX;
   for(i=0; i<(t*2)-1; i++) new->key[i] = INT_MAX;
 
-  new->leafFiles = (char**) malloc(sizeof(char*)*2*t); 
+  new->leafFiles = (char**) malloc(sizeof(char*)*2*t);
 
   for(i=0; i<(t*2); i++){
     new->leafFiles[i] = (char*) malloc(sizeof(char)*5);
     strcpy(new->leafFiles[i], "XXXX" );
-  }           
-                                                   
+  }
+  
   return new;
 }
 
@@ -58,7 +52,6 @@ void bPlusTreeFree2M(BPlusTree2M *a){
 }
 
 void bPlusTreePrintNode2M(BPlusTree2M *a){
-
   int i;
   char *str;
   printf("\n========================================\n");
@@ -90,7 +83,6 @@ void bPlusTreePrintNode2M(BPlusTree2M *a){
   printf("]\n");
   printf("\n========================================\n");
 }
-
 
 LeafNode *leafNodeCreate2M(int t){
   if(t<=0){
@@ -131,7 +123,6 @@ LeafNode *leafNodeCreate2M(int t){
     strcpy((new->YearFileArray)[i], "XXXX");
   }
   return new;
-
 }
 
 void leafNodeFree2M(LeafNode *l){
@@ -145,7 +136,6 @@ void leafNodeFree2M(LeafNode *l){
 }
 
 void leafNodePrint(LeafNode *l){
-
   if(!l){
     printf("error printing leafNode");
     exit(1);
@@ -168,7 +158,6 @@ void leafNodePrint(LeafNode *l){
   }
   printf("]\n");
   printf("\n========================================\n");
-
 }
 
 int isInLeaf(FILE *leafFile, int k){
@@ -189,9 +178,7 @@ int isInLeaf(FILE *leafFile, int k){
   return test;
 }
 
-
 char *bPlusTreeSearch2M(FILE *indexFileP, int k, long offset){
-
   if(!indexFileP || (offset == LONG_MAX)) return NULL;
   
   BPlusTree2M *node = readIndexNode(indexFileP, offset);
@@ -207,7 +194,7 @@ char *bPlusTreeSearch2M(FILE *indexFileP, int k, long offset){
   if(i < node->numKeys && k == node->key[i]) i++;
 
   if(node->isLeafsParent){
-    leafNameWithExt = nameToFile(node->leafFiles[i]);
+    leafNameWithExt = nameToFileInDirectory(node->leafFiles[i], bPlusTreeGetCurrentDirectory());
     if (!leafNameWithExt){
       printf("error accessing leafFileNames in a leaf parent");
       exit(1);
@@ -217,10 +204,8 @@ char *bPlusTreeSearch2M(FILE *indexFileP, int k, long offset){
     if(!leafFile){
       free(leafNameWithExt);
       bPlusTreeFree2M(node);
-      printf("error opening leaf");
       return NULL;
     }
-
 
     test = isInLeaf(leafFile, k);
     fclose(leafFile);
@@ -235,17 +220,12 @@ char *bPlusTreeSearch2M(FILE *indexFileP, int k, long offset){
   bPlusTreeFree2M(node);
   
   if(nextOffset == LONG_MAX){
-    //printf("error: NULL child");
     return NULL;
   }
   return bPlusTreeSearch2M(indexFileP, k, nextOffset);
-
-
 }
 
-
-long splitWithIndexChild2M(FILE *indexFile, long parentOffset, int newChildIndex, long fullNodeOffset, int t){ //assuming indexFile was opened with "rb+"
-
+long splitWithIndexChild2M(FILE *indexFile, long parentOffset, int newChildIndex, long fullNodeOffset, int t){
   BPlusTree2M *fullNode = readIndexNode(indexFile, fullNodeOffset);
   BPlusTree2M *brother =  bPlusTreeCreate2M(t);
   
@@ -258,7 +238,6 @@ long splitWithIndexChild2M(FILE *indexFile, long parentOffset, int newChildIndex
     brother->key[j] = fullNode->key[j+t];
     fullNode->key[j+t] = INT_MAX;
   }
-
 
   for(j=0; j < t; j++){
     brother->childOffsets[j] = fullNode->childOffsets[j+t];
@@ -306,8 +285,7 @@ long splitWithIndexChild2M(FILE *indexFile, long parentOffset, int newChildIndex
   return parentOffset;
 }
 
-long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, FILE *fullLeafFile, int t){ //assuming indexFile was opened with "rb+"
-
+long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, FILE *fullLeafFile, int t){
   if(!fullLeafFile){
     printf("error  opening leaf");
     exit(1);
@@ -321,8 +299,6 @@ long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, 
   int j;
   char *newLeafName, *newLeafNameWithExt;
 
-
-
   for(j=0; j < t; j++){
     strcpy(newLeaf->YearFileArray[j], fullLeaf->YearFileArray[j+t-1]);
     strcpy(fullLeaf->YearFileArray[j+t-1], "XXXX");
@@ -331,8 +307,7 @@ long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, 
   strcpy(newLeaf->nextLeafFile, fullLeaf->nextLeafFile);
 
   newLeafName = newFileName(indexFile);
-  newLeafNameWithExt = nameToFile(newLeafName);
-
+  newLeafNameWithExt = nameToFileInDirectory(newLeafName, bPlusTreeGetCurrentDirectory());
 
   FILE *newLeafFile = fopen(newLeafNameWithExt, "wb");
   if(!newLeafFile){
@@ -342,10 +317,9 @@ long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, 
   writeLeafData(newLeaf, newLeafFile);
   fclose(newLeafFile);
 
-
-  strcpy(fullLeaf->nextLeafFile, newLeafName);   
-  fullLeaf->numKeys = t-1;                                         
-                                                                                
+  strcpy(fullLeaf->nextLeafFile, newLeafName);
+  fullLeaf->numKeys = t-1;
+  
   if(fseek(fullLeafFile, 0L, SEEK_SET) != 0){
     printf("error with fseek in splitWithLeafChild2M");
     exit(1);
@@ -368,7 +342,6 @@ long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, 
   writeIndexNode(indexFile, parent, parentOffset);
   fflush(indexFile);
 
-  
   free(newLeafName);
   free(newLeafNameWithExt);
   leafNodeFree2M(newLeaf);
@@ -376,12 +349,9 @@ long splitWithLeafChild2M(FILE *indexFile, long parentOffset, int newLeafIndex, 
   bPlusTreeFree2M(parent);
 
   return parentOffset;
-
-
 }
 
 int insertNonFullLeaf2M(FILE *nonFullLeafFile, int key){
-
   if(!nonFullLeafFile){
     printf("error  opening leaf");
     exit(1);
@@ -415,21 +385,17 @@ int insertNonFullLeaf2M(FILE *nonFullLeafFile, int key){
   leafNodeFree2M(leafNode);
 
   return 1;
-
 }
 
 long insertNonFullNode2M(FILE *indexFile, long nonFullNodeOffset, int key, int t){
-  
   BPlusTree2M *nonFullNode = readIndexNode(indexFile, nonFullNodeOffset);
   int i = nonFullNode->numKeys-1;
 
   while((i>=0) && (key < nonFullNode->key[i])) i--;
   i++;
-  
 
   if(nonFullNode->isLeafsParent){
-
-    char *leafFileNameWithExt = nameToFile(nonFullNode->leafFiles[i]); 
+    char *leafFileNameWithExt = nameToFileInDirectory(nonFullNode->leafFiles[i], bPlusTreeGetCurrentDirectory()); 
     FILE *leafFile = fopen(leafFileNameWithExt, "rb+");
     if(!leafFile){
       printf("error inserting key");
@@ -451,7 +417,6 @@ long insertNonFullNode2M(FILE *indexFile, long nonFullNodeOffset, int key, int t
     if(leafNK == ((2*t)-1)){
       rewind(leafFile);
       if(isInLeaf(leafFile, key)){
-        printf("key already in the tree!\n");
         fclose(leafFile);
         bPlusTreeFree2M(nonFullNode);
         return nonFullNodeOffset;
@@ -468,18 +433,15 @@ long insertNonFullNode2M(FILE *indexFile, long nonFullNodeOffset, int key, int t
       if (j < nonFullNode->numKeys && key == nonFullNode->key[j]) j++;
       i = j;
 
-
-      leafFileNameWithExt = nameToFile(nonFullNode->leafFiles[i]); 
+      leafFileNameWithExt = nameToFileInDirectory(nonFullNode->leafFiles[i], bPlusTreeGetCurrentDirectory()); 
       leafFile = fopen(leafFileNameWithExt, "rb+");
       if(!leafFile){
         printf("error inserting key");
         exit(1);
       }
       free(leafFileNameWithExt);
-      
     }
     if(!insertNonFullLeaf2M(leafFile, key)){
-      printf("key already in the tree!\n");
       fclose(leafFile);
       bPlusTreeFree2M(nonFullNode);
       return nonFullNodeOffset;
@@ -488,7 +450,6 @@ long insertNonFullNode2M(FILE *indexFile, long nonFullNodeOffset, int key, int t
     bPlusTreeFree2M(nonFullNode);
   }
   else{
-    
     fseek(indexFile, (nonFullNode->childOffsets[i]) + 4L, SEEK_SET);
     int nodeNK;
     if(fread(&nodeNK, sizeof(int), 1, indexFile) != 1){
@@ -513,10 +474,7 @@ long insertNonFullNode2M(FILE *indexFile, long nonFullNodeOffset, int key, int t
   return nonFullNodeOffset;
 }
 
-
-
 int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
-
   long rootOffset = getRootOffset(indexFile);
   long nonFullIndexOffset = rootOffset;
   BPlusTree2M *indexNode = readIndexNode(indexFile, rootOffset);
@@ -537,7 +495,7 @@ int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
       (leafNode->numKeys)++;
 
       char *newLeafName = newFileName(indexFile);
-      char *newLeafNameWithExt = nameToFile(newLeafName);
+      char *newLeafNameWithExt = nameToFileInDirectory(newLeafName, bPlusTreeGetCurrentDirectory());
 
       leafFile = fopen(newLeafNameWithExt, "wb");
       if(!leafFile){
@@ -547,31 +505,27 @@ int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
       strcpy(indexNode->leafFiles[0], newLeafName);
       writeLeafData(leafNode, leafFile);
       writeIndexNode(indexFile, indexNode, nonFullIndexOffset);
+      bPlusTreeFree2M(indexNode);
 
       free(newLeafName);
       free(newLeafNameWithExt);
       fclose(leafFile);
       leafNodeFree2M(leafNode);
-      printBPlusTree(indexFile);
       return 1;
     }
     else{
-      leafFileNameWithExt = nameToFile(indexNode->leafFiles[0]);
+      leafFileNameWithExt = nameToFileInDirectory(indexNode->leafFiles[0], bPlusTreeGetCurrentDirectory());
       leafFile = fopen(leafFileNameWithExt, "rb+");
       if(!leafFile){
         printf("error opening leaf in bPlusTreeInsert2M");
         exit(1);
       }
       if(isInLeaf(leafFile, key)){
-        printf("key already in the tree!\n");
         fclose(leafFile);
         free(leafFileNameWithExt);
         bPlusTreeFree2M(indexNode);
-        printBPlusTree(indexFile);
         return 0;
       }
-
-
 
       leafNode = readLeafData(leafFile);
 
@@ -584,7 +538,7 @@ int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
           int j = 0;
           while ((j < indexNode->numKeys) && (key > indexNode->key[j])) j++;
           if (j < indexNode->numKeys && key == indexNode->key[j]) j++;
-          leafFileNameWithExt = nameToFile(indexNode->leafFiles[j]);
+          leafFileNameWithExt = nameToFileInDirectory(indexNode->leafFiles[j], bPlusTreeGetCurrentDirectory());
         }
         leafFile = fopen(leafFileNameWithExt, "rb+");
         if(!leafFile){
@@ -594,26 +548,23 @@ int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
         leafNode = readLeafData(leafFile);
       }
       if(!insertNonFullLeaf2M(leafFile, key)){
-        printf("key already in the tree!\n");
         leafNodeFree2M(leafNode);
         fclose(leafFile);
         bPlusTreeFree2M(indexNode);
         free(leafFileNameWithExt);
-        printBPlusTree(indexFile);
         return 0;
       }
 
       leafNodeFree2M(leafNode);
       fclose(leafFile);
       bPlusTreeFree2M(indexNode);
-      printBPlusTree(indexFile);
+      free(leafFileNameWithExt);
       return 1;
     }
   }
   else{
     if(bPlusTreeSearch2M(indexFile, key, rootOffset)){
-      printf("key already in the tree!\n");
-      printBPlusTree(indexFile);
+      bPlusTreeFree2M(indexNode);
       return 0;
     }
     if(indexNode->numKeys == (2*t)-1){
@@ -637,15 +588,493 @@ int bPlusTreeInsert2M(FILE *indexFile, int key, int t){
       fflush(indexFile);
       insertNonFullNode2M(indexFile, end, key, t);
       bPlusTreeFree2M(newRoot);
-      printBPlusTree(indexFile);
       return 1;
     }
     insertNonFullNode2M(indexFile, nonFullIndexOffset, key, t);
     bPlusTreeFree2M(indexNode);
-    printBPlusTree(indexFile);
     return 1;
   }
-
 }
 
-#endif
+int removeFromLeaf(FILE *leafFile, int key){
+  if(!leafFile) return 0;
+  
+  rewind(leafFile);
+  LeafNode *leaf = readLeafData(leafFile);
+  
+  int i, found = -1;
+  char strkey[5];
+  snprintf(strkey, sizeof(strkey), "%04d", key);
+  
+  for(i = 0; i < leaf->numKeys; i++){
+    if(strcmp(leaf->YearFileArray[i], strkey) == 0){
+      found = i;
+      break;
+    }
+  }
+  
+  if(found == -1){
+    leafNodeFree2M(leaf);
+    return 0;
+  }
+  
+  char *yearFileName = nameToFileInDirectory(leaf->YearFileArray[found], bPlusTreeGetCurrentDirectory());
+  if(yearFileName){
+    remove(yearFileName);
+    free(yearFileName);
+  }
+  
+  for(i = found; i < leaf->numKeys - 1; i++){
+    strcpy(leaf->YearFileArray[i], leaf->YearFileArray[i+1]);
+  }
+  strcpy(leaf->YearFileArray[leaf->numKeys - 1], "XXXX");
+  leaf->numKeys--;
+  
+  rewind(leafFile);
+  writeLeafData(leaf, leafFile);
+  fflush(leafFile);
+  
+  leafNodeFree2M(leaf);
+  return 1;
+}
+
+int getMinKeyFromLeaf(FILE *leafFile){
+  if(!leafFile) return -1;
+  
+  rewind(leafFile);
+  LeafNode *leaf = readLeafData(leafFile);
+  
+  if(leaf->numKeys == 0){
+    leafNodeFree2M(leaf);
+    return -1;
+  }
+  
+  int minKey = atol(leaf->YearFileArray[0]);
+  leafNodeFree2M(leaf);
+  return minKey;
+}
+
+int borrowFromLeftLeaf(FILE *leftLeafFile, FILE *currentLeafFile, FILE *indexFile, long parentOffset, int parentKeyIndex, int t){
+  if(!leftLeafFile || !currentLeafFile) return 0;
+  
+  rewind(leftLeafFile);
+  rewind(currentLeafFile);
+  
+  LeafNode *leftLeaf = readLeafData(leftLeafFile);
+  LeafNode *currentLeaf = readLeafData(currentLeafFile);
+  
+  if(leftLeaf->numKeys <= t-1){
+    leafNodeFree2M(leftLeaf);
+    leafNodeFree2M(currentLeaf);
+    return 0;
+  }
+  
+  int i;
+  for(i = currentLeaf->numKeys; i > 0; i--){
+    strcpy(currentLeaf->YearFileArray[i], currentLeaf->YearFileArray[i-1]);
+  }
+  strcpy(currentLeaf->YearFileArray[0], leftLeaf->YearFileArray[leftLeaf->numKeys - 1]);
+  strcpy(leftLeaf->YearFileArray[leftLeaf->numKeys - 1], "XXXX");
+  
+  currentLeaf->numKeys++;
+  leftLeaf->numKeys--;
+  
+  rewind(leftLeafFile);
+  writeLeafData(leftLeaf, leftLeafFile);
+  fflush(leftLeafFile);
+  
+  rewind(currentLeafFile);
+  writeLeafData(currentLeaf, currentLeafFile);
+  fflush(currentLeafFile);
+  
+  BPlusTree2M *parent = readIndexNode(indexFile, parentOffset);
+  parent->key[parentKeyIndex] = atol(currentLeaf->YearFileArray[0]);
+  writeIndexNode(indexFile, parent, parentOffset);
+  fflush(indexFile);
+  bPlusTreeFree2M(parent);
+  
+  leafNodeFree2M(leftLeaf);
+  leafNodeFree2M(currentLeaf);
+  return 1;
+}
+
+int borrowFromRightLeaf(FILE *rightLeafFile, FILE *currentLeafFile, FILE *indexFile, long parentOffset, int parentKeyIndex, int t){
+  if(!rightLeafFile || !currentLeafFile) return 0;
+  
+  rewind(rightLeafFile);
+  rewind(currentLeafFile);
+  
+  LeafNode *rightLeaf = readLeafData(rightLeafFile);
+  LeafNode *currentLeaf = readLeafData(currentLeafFile);
+  
+  if(rightLeaf->numKeys <= t-1){
+    leafNodeFree2M(rightLeaf);
+    leafNodeFree2M(currentLeaf);
+    return 0;
+  }
+  
+  strcpy(currentLeaf->YearFileArray[currentLeaf->numKeys], rightLeaf->YearFileArray[0]);
+  currentLeaf->numKeys++;
+  
+  int i;
+  for(i = 0; i < rightLeaf->numKeys - 1; i++){
+    strcpy(rightLeaf->YearFileArray[i], rightLeaf->YearFileArray[i+1]);
+  }
+  strcpy(rightLeaf->YearFileArray[rightLeaf->numKeys - 1], "XXXX");
+  rightLeaf->numKeys--;
+  
+  rewind(rightLeafFile);
+  writeLeafData(rightLeaf, rightLeafFile);
+  fflush(rightLeafFile);
+  
+  rewind(currentLeafFile);
+  writeLeafData(currentLeaf, currentLeafFile);
+  fflush(currentLeafFile);
+  
+  BPlusTree2M *parent = readIndexNode(indexFile, parentOffset);
+  parent->key[parentKeyIndex] = atol(rightLeaf->YearFileArray[0]);
+  writeIndexNode(indexFile, parent, parentOffset);
+  fflush(indexFile);
+  bPlusTreeFree2M(parent);
+  
+  leafNodeFree2M(rightLeaf);
+  leafNodeFree2M(currentLeaf);
+  return 1;
+}
+
+int mergeLeaves(FILE *leftLeafFile, FILE *rightLeafFile, FILE *indexFile, long parentOffset, int parentKeyIndex, int t){
+  if(!leftLeafFile || !rightLeafFile) return 0;
+  
+  rewind(leftLeafFile);
+  rewind(rightLeafFile);
+  
+  LeafNode *leftLeaf = readLeafData(leftLeafFile);
+  LeafNode *rightLeaf = readLeafData(rightLeafFile);
+  
+  int i;
+  for(i = 0; i < rightLeaf->numKeys; i++){
+    strcpy(leftLeaf->YearFileArray[leftLeaf->numKeys + i], rightLeaf->YearFileArray[i]);
+  }
+  leftLeaf->numKeys += rightLeaf->numKeys;
+  
+  strcpy(leftLeaf->nextLeafFile, rightLeaf->nextLeafFile);
+  
+  rewind(leftLeafFile);
+  writeLeafData(leftLeaf, leftLeafFile);
+  fflush(leftLeafFile);
+  
+  BPlusTree2M *parent = readIndexNode(indexFile, parentOffset);
+  
+  for(i = parentKeyIndex; i < parent->numKeys - 1; i++){
+    parent->key[i] = parent->key[i+1];
+  }
+  parent->key[parent->numKeys - 1] = INT_MAX;
+  
+  for(i = parentKeyIndex + 1; i < parent->numKeys; i++){
+    strcpy(parent->leafFiles[i], parent->leafFiles[i+1]);
+  }
+  strcpy(parent->leafFiles[parent->numKeys], "XXXX");
+  
+  parent->numKeys--;
+  
+  writeIndexNode(indexFile, parent, parentOffset);
+  fflush(indexFile);
+  bPlusTreeFree2M(parent);
+  
+  leafNodeFree2M(leftLeaf);
+  leafNodeFree2M(rightLeaf);
+  return 1;
+}
+
+long removeFromNode(FILE *indexFile, long nodeOffset, int key, int t);
+
+long handleLeafUnderflow(FILE *indexFile, long parentOffset, int leafIndex, int key, int t){
+  BPlusTree2M *parent = readIndexNode(indexFile, parentOffset);
+  
+  char *currentLeafName = nameToFileInDirectory(parent->leafFiles[leafIndex], bPlusTreeGetCurrentDirectory());
+  FILE *currentLeafFile = fopen(currentLeafName, "rb+");
+  free(currentLeafName);
+  
+  if(!currentLeafFile){
+    bPlusTreeFree2M(parent);
+    return parentOffset;
+  }
+  
+  rewind(currentLeafFile);
+  LeafNode *currentLeaf = readLeafData(currentLeafFile);
+  
+  if(currentLeaf->numKeys >= t){
+    leafNodeFree2M(currentLeaf);
+    fclose(currentLeafFile);
+    bPlusTreeFree2M(parent);
+    return parentOffset;
+  }
+  
+  leafNodeFree2M(currentLeaf);
+  
+  if(leafIndex > 0){
+    char *leftLeafName = nameToFileInDirectory(parent->leafFiles[leafIndex - 1], bPlusTreeGetCurrentDirectory());
+    FILE *leftLeafFile = fopen(leftLeafName, "rb+");
+    free(leftLeafName);
+    
+    if(leftLeafFile){
+      if(borrowFromLeftLeaf(leftLeafFile, currentLeafFile, indexFile, parentOffset, leafIndex - 1, t)){
+        fclose(leftLeafFile);
+        fclose(currentLeafFile);
+        bPlusTreeFree2M(parent);
+        return parentOffset;
+      }
+      fclose(leftLeafFile);
+    }
+  }
+  
+  if(leafIndex < parent->numKeys){
+    char *rightLeafName = nameToFileInDirectory(parent->leafFiles[leafIndex + 1], bPlusTreeGetCurrentDirectory());
+    FILE *rightLeafFile = fopen(rightLeafName, "rb+");
+    free(rightLeafName);
+    
+    if(rightLeafFile){
+      if(borrowFromRightLeaf(rightLeafFile, currentLeafFile, indexFile, parentOffset, leafIndex, t)){
+        fclose(rightLeafFile);
+        fclose(currentLeafFile);
+        bPlusTreeFree2M(parent);
+        return parentOffset;
+      }
+      fclose(rightLeafFile);
+    }
+  }
+  
+  if(leafIndex > 0){
+    char *leftLeafName = nameToFileInDirectory(parent->leafFiles[leafIndex - 1], bPlusTreeGetCurrentDirectory());
+    FILE *leftLeafFile = fopen(leftLeafName, "rb+");
+    free(leftLeafName);
+    
+    if(leftLeafFile){
+      mergeLeaves(leftLeafFile, currentLeafFile, indexFile, parentOffset, leafIndex - 1, t);
+      fclose(leftLeafFile);
+    }
+  }
+  else if(leafIndex < parent->numKeys){
+    char *rightLeafName = nameToFileInDirectory(parent->leafFiles[leafIndex + 1], bPlusTreeGetCurrentDirectory());
+    FILE *rightLeafFile = fopen(rightLeafName, "rb+");
+    free(rightLeafName);
+    
+    if(rightLeafFile){
+      mergeLeaves(currentLeafFile, rightLeafFile, indexFile, parentOffset, leafIndex, t);
+      fclose(rightLeafFile);
+    }
+  }
+  
+  fclose(currentLeafFile);
+  bPlusTreeFree2M(parent);
+  
+  BPlusTree2M *updatedParent = readIndexNode(indexFile, parentOffset);
+  if(updatedParent->numKeys == 0 && parentOffset == getRootOffset(indexFile)){
+    bPlusTreeFree2M(updatedParent);
+    return parentOffset;
+  }
+  bPlusTreeFree2M(updatedParent);
+  
+  return parentOffset;
+}
+
+long removeFromNode(FILE *indexFile, long nodeOffset, int key, int t){
+  if(nodeOffset == LONG_MAX) return LONG_MAX;
+  
+  BPlusTree2M *node = readIndexNode(indexFile, nodeOffset);
+  
+  int i = 0;
+  while(i < node->numKeys && key > node->key[i]) i++;
+  if(i < node->numKeys && key == node->key[i]) i++;
+  
+  if(node->isLeafsParent){
+    char *leafName = nameToFileInDirectory(node->leafFiles[i], bPlusTreeGetCurrentDirectory());
+    FILE *leafFile = fopen(leafName, "rb+");
+    free(leafName);
+    
+    if(!leafFile){
+      bPlusTreeFree2M(node);
+      return nodeOffset;
+    }
+    
+    if(!removeFromLeaf(leafFile, key)){
+      fclose(leafFile);
+      bPlusTreeFree2M(node);
+      return nodeOffset;
+    }
+    
+    fclose(leafFile);
+    bPlusTreeFree2M(node);
+    
+    return handleLeafUnderflow(indexFile, nodeOffset, i, key, t);
+  }
+  else{
+    long childOffset = node->childOffsets[i];
+    bPlusTreeFree2M(node);
+    
+    removeFromNode(indexFile, childOffset, key, t);
+    return nodeOffset;
+  }
+}
+
+int bPlusTreeRemove2M(FILE *indexFile, int key, int t){
+  if(!indexFile) return 0;
+  
+  long rootOffset = getRootOffset(indexFile);
+  
+  char *result = bPlusTreeSearch2M(indexFile, key, rootOffset);
+  if(!result){
+    return 0;
+  }
+  free(result);
+  
+  removeFromNode(indexFile, rootOffset, key, t);
+  
+  BPlusTree2M *root = readIndexNode(indexFile, rootOffset);
+  if(root->numKeys == 0 && !root->isLeafsParent && root->childOffsets[0] != LONG_MAX){
+    setRootOffset(indexFile, root->childOffsets[0]);
+  }
+  bPlusTreeFree2M(root);
+  
+  return 1;
+}
+
+char **bPlusTreeRangeSearch2M(FILE *indexFile, int minKey, int maxKey, int *resultCount){
+  if(!indexFile || minKey > maxKey){
+    *resultCount = 0;
+    return NULL;
+  }
+  
+  long rootOffset = getRootOffset(indexFile);
+  char *firstLeafName = bPlusTreeSearch2M(indexFile, minKey, rootOffset);
+  
+  if(!firstLeafName){
+    BPlusTree2M *root = readIndexNode(indexFile, rootOffset);
+    if(root->isLeafsParent && strcmp(root->leafFiles[0], "XXXX") != 0){
+      firstLeafName = nameToFileInDirectory(root->leafFiles[0], bPlusTreeGetCurrentDirectory());
+    }
+    else{
+      bPlusTreeFree2M(root);
+      *resultCount = 0;
+      return NULL;
+    }
+    bPlusTreeFree2M(root);
+  }
+  
+  char **results = (char**)malloc(sizeof(char*) * 1000);
+  int count = 0;
+  
+  char *currentLeafName = firstLeafName;
+  
+  while(currentLeafName && strcmp(currentLeafName, "XXXX.dat") != 0){
+    FILE *leafFile = fopen(currentLeafName, "rb");
+    if(!leafFile) break;
+    
+    LeafNode *leaf = readLeafData(leafFile);
+    fclose(leafFile);
+    
+    for(int i = 0; i < leaf->numKeys; i++){
+      int yearKey = atol(leaf->YearFileArray[i]);
+      if(yearKey >= minKey && yearKey <= maxKey){
+        results[count] = (char*)malloc(sizeof(char) * 5);
+        strcpy(results[count], leaf->YearFileArray[i]);
+        count++;
+      }
+      if(yearKey > maxKey) break;
+    }
+    
+    char *nextLeafName = NULL;
+    if(strcmp(leaf->nextLeafFile, "XXXX") != 0){
+      nextLeafName = nameToFileInDirectory(leaf->nextLeafFile, bPlusTreeGetCurrentDirectory());
+    }
+    
+    leafNodeFree2M(leaf);
+    if(currentLeafName != firstLeafName) free(currentLeafName);
+    currentLeafName = nextLeafName;
+    
+    if(currentLeafName){
+      FILE *testFile = fopen(currentLeafName, "rb");
+      if(!testFile){
+        free(currentLeafName);
+        currentLeafName = NULL;
+        break;
+      }
+      LeafNode *testLeaf = readLeafData(testFile);
+      fclose(testFile);
+      if(testLeaf->numKeys > 0 && atol(testLeaf->YearFileArray[0]) > maxKey){
+        leafNodeFree2M(testLeaf);
+        free(currentLeafName);
+        currentLeafName = NULL;
+        break;
+      }
+      leafNodeFree2M(testLeaf);
+    }
+  }
+  
+  if(currentLeafName && currentLeafName != firstLeafName) free(currentLeafName);
+  if(firstLeafName) free(firstLeafName);
+  
+  *resultCount = count;
+  
+  if(count == 0){
+    free(results);
+    return NULL;
+  }
+  
+  return results;
+}
+
+void bPlusTreePrintAll2MAux(FILE *indexFile, long nodeOffset, int level, int t);
+
+void bPlusTreePrintAll2M(FILE *indexFile, int t) {
+  if(!indexFile) return;
+  
+  long rootOffset = getRootOffset(indexFile);
+  bPlusTreePrintAll2MAux(indexFile, rootOffset, 0, t);
+}
+
+void bPlusTreePrintAll2MAux(FILE *indexFile, long nodeOffset, int level, int t) {
+  if(nodeOffset == LONG_MAX) return;
+  
+  BPlusTree2M *node = readIndexNode(indexFile, nodeOffset);
+  if(!node) return;
+  
+  int i, j;
+  
+  if(node->isLeafsParent) {
+    bPlusTreePrintAll2MAux(indexFile, node->childOffsets[node->numKeys], level + 1, t);
+    
+    for(i = node->numKeys - 1; i >= 0; i--) {
+      for(j = 0; j <= level; j++) printf("\t");
+      printf("%d\n", node->key[i]);
+      
+      char *leafFileName = node->leafFiles[i];
+      if(strcmp(leafFileName, "XXXX") != 0) {
+        char *leafFileNameWithExt = nameToFileInDirectory(leafFileName, bPlusTreeGetCurrentDirectory());
+        FILE *leafFile = fopen(leafFileNameWithExt, "rb");
+        if(leafFile) {
+          LeafNode *leaf = readLeafData(leafFile);
+          if(leaf) {
+            for(int k = leaf->numKeys - 1; k >= 0; k--) {
+              for(j = 0; j <= level + 1; j++) printf("\t");
+              printf("%s\n", leaf->YearFileArray[k]);
+            }
+            leafNodeFree2M(leaf);
+          }
+          fclose(leafFile);
+        }
+        free(leafFileNameWithExt);
+      }
+    }
+  } else {
+    bPlusTreePrintAll2MAux(indexFile, node->childOffsets[node->numKeys], level + 1, t);
+    
+    for(i = node->numKeys - 1; i >= 0; i--) {
+      for(j = 0; j <= level; j++) printf("\t");
+      printf("%d\n", node->key[i]);
+      bPlusTreePrintAll2MAux(indexFile, node->childOffsets[i], level + 1, t);
+    }
+  }
+  
+  bPlusTreeFree2M(node);
+} //porra 1080 linhas???

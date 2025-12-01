@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 11)
 include_directories(libs)
 include_directories(src)
 
-option(BUILD_TESTS "Build test executables" OFF)
+#option(BUILD_TESTS "comp testes " OFF)
 
 #se adicionar novas libs inclua-as aqui
 set(LIB_SOURCES
@@ -14,8 +14,11 @@ set(LIB_SOURCES
         libs/BinarySearchTree.c
         libs/LinkedList.c
         libs/BPlusTree.c
+        libs/BPlusTree2M.c
+        libs/BPlusStorage.c
         libs/HashUtils.c
         libs/HashMap.c
+        libs/HashMapM2.c
 )
 set(LIB_HEADERS
         libs/BinaryTree.h
@@ -24,53 +27,44 @@ set(LIB_HEADERS
         libs/GenericTypes.h
         libs/GenericImplementations.h
         libs/BPlusTree.h
+        libs/BPlusTree2M.h
+        libs/BPlusStorage.h
         libs/HashUtils.h
         libs/HashMap.h
+        libs/HashMapM2.h
 )
 
 #inclua src aqui
 set(SRC_SOURCES
         src/Main.c
+        src/Console.c
+        src/Mutation.c
         src/models/ChampionshipInfo.c
         src/models/EstandarteAward.c
         src/models/SchoolInfo.c
         src/models/YearInfo.c
         src/models/Participation.c
         src/models/IndividualInfo.c
+        src/parsers/Parser.c
+        src/parsers/Indexer.c
 )
 set(SRC_HEADERS
+        src/Console.h
+        src/Mutation.h
         src/models/ChampionshipInfo.h
         src/models/EstandarteAward.h
         src/models/SchoolInfo.h
         src/models/YearInfo.h
         src/models/Participation.h
         src/models/IndividualInfo.h
+        src/parsers/Parser.h
+        src/parsers/Indexer.h
 )
 
-if(BUILD_TESTS)
-    enable_testing()
-    add_executable(testBinaryTree test/TestBinaryTree.c ${LIB_SOURCES}) 
-    add_executable(testBinarySearchTree test/TestBinarySearchTree.c ${LIB_SOURCES})
-    add_executable(testLinkedList test/TestLinkedList.c ${LIB_SOURCES}) 
-    add_executable(testBPlusTree test/TestBPlusTree.c ${LIB_SOURCES})
-    add_executable(testHashUtils test/TestHashUtils.c ${LIB_SOURCES})
-    add_executable(testHashMap test/TestHashMap.c ${LIB_SOURCES})
-    add_test(NAME BinaryTreeTest COMMAND TestBinaryTree)
-    add_test(NAME BinarySearchTreeTest COMMAND TestBinarySearchTree)
-    add_test(NAME LinkedListTest COMMAND TestLinkedList)
-    add_test(NAME BPlusTreeTest COMMAND TestBPlusTree)
-    add_test(NAME HashUtilsTest COMMAND TestHashUtils)
-    add_test(NAME HashMapTest COMMAND TestHashMap)
-    add_custom_target(runAllTests
-            COMMAND ${CMAKE_CTEST_COMMAND} --verbose
-            DEPENDS TestBinaryTree TestBinarySearchTree TestLinkedList testBPlusTree testHashUtils testHashMap
-    )
     
-else()
-    add_executable(UFF_EDA_Trabalho_Computacional
-            ${SRC_SOURCES}
-            ${SRC_HEADERS}
-            ${LIB_SOURCES}
-            ${LIB_HEADERS}
-    )
-endif()
+add_executable(UFF_EDA_Trabalho_Computacional
+        ${SRC_SOURCES}
+        ${SRC_HEADERS}
+        ${LIB_SOURCES}
+        ${LIB_HEADERS}
+)

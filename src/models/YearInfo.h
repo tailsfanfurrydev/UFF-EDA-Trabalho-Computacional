@@ -17,5 +17,7 @@ void yearInfoPrint(YearInfo* info);
 int yearInfoCompare(YearInfo* a, YearInfo* b);
 void yearInfoAddChampion(YearInfo* info, void* championshipInfo);
 void yearInfoAddRunnerUp(YearInfo* info, void* championshipInfo);
+int yearInfoSave(YearInfo* info, const char* filepath);
+YearInfo* yearInfoLoad(const char* filepath);
 
 #endif
