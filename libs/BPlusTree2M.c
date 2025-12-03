@@ -1046,11 +1046,29 @@ void bPlusTreePrintAll2MAux(FILE *indexFile, long nodeOffset, int level, int t){
   if(node->isLeafsParent){
     bPlusTreePrintAll2MAux(indexFile, node->childOffsets[node->numKeys], level + 1, t);
     
+    char *leafFileName = node->leafFiles[node->numKeys];
+    if(strcmp(leafFileName, "XXXX") != 0){
+      char *leafFileNameWithExt = nameToFileInDirectory(leafFileName, bPlusTreeGetCurrentDirectory());
+      FILE *leafFile = fopen(leafFileNameWithExt, "rb");
+      if(leafFile){
+        LeafNode *leaf = readLeafData(leafFile);
+        if(leaf){
+          for(int k = leaf->numKeys - 1; k >= 0; k--){
+            for(j = 0; j < level; j++) printf("      ");
+            printf("      %s\n", leaf->YearFileArray[k]);
+          }
+          leafNodeFree2M(leaf);
+        }
+        fclose(leafFile);
+      }
+      free(leafFileNameWithExt);
+    }
+    
     for(i = node->numKeys - 1; i >= 0; i--){
-      for(j = 0; j <= level; j++) printf("\t");
-      printf("%d\n", node->key[i]);
+      for(j = 0; j < level; j++) printf("      ");
+      printf("%d\n\n", node->key[i]);
       
-      char *leafFileName = node->leafFiles[i];
+      leafFileName = node->leafFiles[i];
       if(strcmp(leafFileName, "XXXX") != 0){
         char *leafFileNameWithExt = nameToFileInDirectory(leafFileName, bPlusTreeGetCurrentDirectory());
         FILE *leafFile = fopen(leafFileNameWithExt, "rb");
@@ -1058,8 +1076,8 @@ void bPlusTreePrintAll2MAux(FILE *indexFile, long nodeOffset, int level, int t){
           LeafNode *leaf = readLeafData(leafFile);
           if(leaf){
             for(int k = leaf->numKeys - 1; k >= 0; k--){
-              for(j = 0; j <= level + 1; j++) printf("\t");
-              printf("%s\n", leaf->YearFileArray[k]);
+              for(j = 0; j < level; j++) printf("      ");
+              printf("      %s\n", leaf->YearFileArray[k]);
             }
             leafNodeFree2M(leaf);
           }
@@ -1067,13 +1085,14 @@ void bPlusTreePrintAll2MAux(FILE *indexFile, long nodeOffset, int level, int t){
         }
         free(leafFileNameWithExt);
       }
+      
+      bPlusTreePrintAll2MAux(indexFile, node->childOffsets[i], level + 1, t);
     }
   } else{
     bPlusTreePrintAll2MAux(indexFile, node->childOffsets[node->numKeys], level + 1, t);
-    
     for(i = node->numKeys - 1; i >= 0; i--){
-      for(j = 0; j <= level; j++) printf("\t");
-      printf("%d\n", node->key[i]);
+      for(j = 0; j < level; j++) printf("      ");
+      printf("%d\n\n", node->key[i]);
       bPlusTreePrintAll2MAux(indexFile, node->childOffsets[i], level + 1, t);
     }
   }

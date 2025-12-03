@@ -241,7 +241,7 @@ Melhor Escola 	Vila Isabel
 Mestre-sala 	Imperatriz 	Chiquinho
 Passista Feminino 	Salgueiro 	Regina
 Passista Masculino 	Mangueira 	Ademir Gargalhada
-Personalidade Feminina 	Cabuçu 	Vilma dos Santos
+Personalidade Feminina 	Unidos do Cabuçu 	Vilma dos Santos
 Personalidade Masculina 	Estácio de Sá 	Xangô do Estácio
 Porta-bandeira 	Império Serrano 	Irene Silva
 Revelação 	Jacarezinho 	Alex (Primeiro mestre-sala)

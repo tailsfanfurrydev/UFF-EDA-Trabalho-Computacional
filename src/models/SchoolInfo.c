@@ -62,14 +62,41 @@ int schoolInfoCompare(SchoolInfo* a, SchoolInfo* b) {
     if (!a || !b) return 0;
     return strcmp(a->schoolName, b->schoolName);
 }
+
 void schoolInfoAddTitle(SchoolInfo* info, void* championshipInfo) {
+    if (!info || !championshipInfo) return;
     
-    if (info && championshipInfo) info->titleList = linkedListInsert(info->titleList, championshipInfo);
+    ChampionshipInfo* newChamp = (ChampionshipInfo*)championshipInfo;
+    
+    LinkedList* current = info->titleList;
+    while(current && current->info) {
+        ChampionshipInfo* existing = (ChampionshipInfo*)current->info;
+        if(existing->year == newChamp->year) {
+            championshipInfoFree(newChamp);
+            return;
+        }
+        current = current->next;
+    }
+    
+    info->titleList = linkedListInsert(info->titleList, championshipInfo);
 }
+
 void schoolInfoAddRunnerUp(SchoolInfo* info, void* championshipInfo) {
+    if (!info || !championshipInfo) return;
     
-    if (info && championshipInfo)
-        info->runnerUpList = linkedListInsert(info->runnerUpList, championshipInfo);
+    ChampionshipInfo* newChamp = (ChampionshipInfo*)championshipInfo;
+    
+    LinkedList* current = info->runnerUpList;
+    while(current && current->info) {
+        ChampionshipInfo* existing = (ChampionshipInfo*)current->info;
+        if(existing->year == newChamp->year) {
+            championshipInfoFree(newChamp); //o arquivo tem duplicatas, ignorar elas e liberar pra tirar o leak
+            return;
+        }
+        current = current->next;
+    }
+    
+    info->runnerUpList = linkedListInsert(info->runnerUpList, championshipInfo);
 }
 void schoolInfoAddAward(SchoolInfo* info, void* estandarteAward) {
    

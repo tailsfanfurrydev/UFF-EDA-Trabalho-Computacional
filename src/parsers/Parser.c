@@ -13,13 +13,20 @@
 #include <sys/stat.h>
 
 static void trim(char* str) {
+    char* start = str;
     char* end;
+    
     while(isspace((unsigned char)*str)) str++;
-    if(*str == 0) return;
+    if(*str == 0) {
+        *start = '\0';
+        return;
+    }
     end = str + strlen(str) - 1;
     while(end > str && isspace((unsigned char)*end)) end--;
     end[1] = '\0';
-    if(str != str) memmove(str, str, strlen(str) + 1);
+    if(str != start) {
+        memmove(start, str, strlen(str) + 1);
+    }
 }
 
 static int isExtinct(const char* schoolName) {
@@ -104,6 +111,10 @@ static int isPersonCategory(const char* category) {
         "Personalidade Masculina",
         "Revelação",
         "Bateria",
+        "Enredo",
+        "Samba-enredo",
+        "Fantasias",
+        "Comissão de Frente",
         NULL
     };
     
@@ -340,8 +351,16 @@ int parseEstandartes(ParserContext* context, const char* filePath) {
             
             char* arrowPos = strstr(individualName, "->");
             if(arrowPos) {
-                *arrowPos = '\0';
-                trim(individualName);
+                char* afterArrow = arrowPos + 2;
+                while(*afterArrow == ' ' || *afterArrow == '\t') afterArrow++;
+                memmove(individualName, afterArrow, strlen(afterArrow) + 1);
+            }
+            
+            char* dePos = strstr(individualName, "\" de ");
+            if(dePos) {
+                char* afterDe = dePos + 5;
+                while(*afterDe == ' ' || *afterDe == '\t') afterDe++;
+                memmove(individualName, afterDe, strlen(afterDe) + 1);
             }
             
             if(strlen(individualName) > 0) {

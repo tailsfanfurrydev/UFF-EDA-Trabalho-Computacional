@@ -58,7 +58,14 @@ static void trim(char* str){
 static int isExtinct(const char* schoolName){
     return strstr(schoolName, "[EXTINTA]") != NULL;
 }
+
+static int isRiotur(const char* schoolName){ //riotur não é escola deve ser ignorada
+    return strcmp(schoolName, "Riotur") == 0;
+}
+
 static void questionACallback(const char *key, const char *filePath, void *userData){
+    if(isRiotur(key)) return;
+    
     SchoolInfo *school = schoolInfoLoad(filePath);
     if(!school || !school->titleList || !school->awardList){
         if(school) schoolInfoFree(school);
@@ -237,6 +244,8 @@ void questionC(IndexerContext *indexer){
 }
 
 static void questionDCallback(const char *key, const char *filePath, void *userData){
+    if(isRiotur(key)) return;
+    
     SchoolCountList *list = (SchoolCountList*)userData;
     
     SchoolInfo *school = schoolInfoLoad(filePath);
@@ -386,7 +395,16 @@ static void questionFCallback(const char *key, const char *filePath, void *userD
     IndividualInfo *person = individualInfoLoad(filePath);
     if(!person) return;
     
-    int count = linkedListSize(person->participationList);
+    // (excluir "carnavalesco" que não é categoria de estandarte)
+    int count = 0;
+    LinkedList *current = person->participationList;
+    while(current != NULL){
+        Participation *p = (Participation*)current->info;
+        if(p && strcasecmp(p->category, "Carnavalesco") != 0){
+            count++;
+        }
+        current = current->next;
+    }
     
     if(count > 0){
         if(list->count >= list->capacity){
@@ -549,6 +567,11 @@ static void questionHCallback(const char *key, const char *filePath, void *userD
     LinkedList *part = person->participationList;
     while(part && part->info){
         Participation *participation = (Participation*)part->info;
+        //participação inclue carnavalesco porem isso nao é um estandarte, entao tem que ignorar
+        if(strcasecmp(participation->category, "Carnavalesco") == 0){
+            part = part->next;
+            continue;
+        }
         
         int found = 0;
         for(int i = 0; i < catCount; i++){
@@ -703,38 +726,54 @@ static void questionMCallback(const char *key, const char *filePath, void *userD
         ChampionshipInfo *champInfo = (ChampionshipInfo*)title->info;
         
         if(strcmp(champInfo->carnivalDesigner, "*") != 0){
-            int found = -1;
-            for(int i = 0; i < data->count; i++){
-                if(strcmp(data->carnavalescos[i].carnavalesco, champInfo->carnivalDesigner) == 0){
-                    found = i;
-                    break;
-                }
-            }
+            char designersCopy[256];
+            strncpy(designersCopy, champInfo->carnivalDesigner, 255);
+            designersCopy[255] = '\0';
             
-            if(found >= 0){
-                int schoolFound = 0;
-                for(int j = 0; j < data->carnavalescos[found].schoolCount; j++){
-                    if(strcmp(data->carnavalescos[found].schools[j], school->schoolName) == 0){
-                        schoolFound = 1;
-                        break;
+            char *token = strtok(designersCopy, ";");
+            while(token != NULL){
+                while(*token == ' ') token++;
+                char *end = token + strlen(token) - 1;
+                while(end > token && *end == ' ') end--;
+                end[1] = '\0';
+                
+                if(strlen(token) > 0){
+                    int found = -1;
+                    for(int i = 0; i < data->count; i++){
+                        if(strcmp(data->carnavalescos[i].carnavalesco, token) == 0){
+                            found = i;
+                            break;
+                        }
+                    }
+                    
+                    if(found >= 0){
+                        int schoolFound = 0;
+                        for(int j = 0; j < data->carnavalescos[found].schoolCount; j++){
+                            if(strcmp(data->carnavalescos[found].schools[j], school->schoolName) == 0){
+                                schoolFound = 1;
+                                break;
+                            }
+                        }
+                        if(!schoolFound && data->carnavalescos[found].schoolCount < 100){
+                            strncpy(data->carnavalescos[found].schools[data->carnavalescos[found].schoolCount], school->schoolName, 255);
+                            data->carnavalescos[found].schools[data->carnavalescos[found].schoolCount][255] = '\0';
+                            data->carnavalescos[found].schoolCount++;
+                        }
+                    } else{
+                        if(data->count >= data->capacity){
+                            data->capacity = data->capacity == 0 ? 64 : data->capacity * 2;
+                            data->carnavalescos = realloc(data->carnavalescos, data->capacity * sizeof(CarnavalescoInfo));
+                        }
+                        strncpy(data->carnavalescos[data->count].carnavalesco, token, 255);
+                        data->carnavalescos[data->count].carnavalesco[255] = '\0';
+                        strncpy(data->carnavalescos[data->count].schools[0], school->schoolName, 255);
+                        data->carnavalescos[data->count].schools[0][255] = '\0';
+                        data->carnavalescos[data->count].schoolCount = 1;
+                        data->count++;
                     }
                 }
-                if(!schoolFound && data->carnavalescos[found].schoolCount < 100){
-                    strncpy(data->carnavalescos[found].schools[data->carnavalescos[found].schoolCount], school->schoolName, 255);
-                    data->carnavalescos[found].schools[data->carnavalescos[found].schoolCount][255] = '\0';
-                    data->carnavalescos[found].schoolCount++;
-                }
-            } else{
-                if(data->count >= data->capacity){
-                    data->capacity = data->capacity == 0 ? 64 : data->capacity * 2;
-                    data->carnavalescos = realloc(data->carnavalescos, data->capacity * sizeof(CarnavalescoInfo));
-                }
-                strncpy(data->carnavalescos[data->count].carnavalesco, champInfo->carnivalDesigner, 255);
-                data->carnavalescos[data->count].carnavalesco[255] = '\0';
-                strncpy(data->carnavalescos[data->count].schools[0], school->schoolName, 255);
-                data->carnavalescos[data->count].schools[0][255] = '\0';
-                data->carnavalescos[data->count].schoolCount = 1;
-                data->count++;
+                
+                token = strtok(NULL, ";");
             }
         }
         
@@ -747,9 +786,8 @@ static void questionMCallback(const char *key, const char *filePath, void *userD
 
 
 
-void questionM(IndexerContext *indexer){
-    printf("\n=== QUESTAO M ===\n");
-    printf("Carnavalescos que ganharam em escolas distintas:\n\n");
+static void carnavalescoDistinctSchoolsLogic(IndexerContext *indexer){
+    printf("Carnavalescos que ganharam o carnaval em escolas distintas:\n\n");
     
     if(!indexer || !indexer->schoolIndex){
         printf("Erro: indices nao carregados\n");
@@ -774,9 +812,105 @@ void questionM(IndexerContext *indexer){
     printf("\n");
 }
 
+typedef struct {
+    char personName[256];
+    char schools[100][256];
+    int schoolCount;
+} EnredoWinner;
 
+typedef struct {
+    EnredoWinner *winners;
+    int count;
+    int capacity;
+} QuestionMResultData;
 
+static void questionMProcessCallback(const char *key, const char *filePath, void *userData) {
+    QuestionMResultData *data = (QuestionMResultData*)userData;
+    
+    IndividualInfo *person = individualInfoLoad(filePath);
+    if(!person || !person->participationList) {
+        if(person) individualInfoFree(person);
+        return;
+    }
+    
+    char schools[100][256];
+    int schoolCount = 0;
+    
+    LinkedList *part = person->participationList;
+    while(part && part->info) {
+        Participation *p = (Participation*)part->info;
+        
+        if(p && strcasecmp(p->category, "Enredo") == 0) {
+            int found = 0;
+            for(int i = 0; i < schoolCount; i++) {
+                if(strcmp(schools[i], p->schoolName) == 0) {
+                    found = 1;
+                    break;
+                }
+            }
+            
+            if(!found && schoolCount < 100) {
+                strncpy(schools[schoolCount], p->schoolName, 255);
+                schools[schoolCount][255] = '\0';
+                schoolCount++;
+            }
+        }
+        
+        part = part->next;
+    }
+    
+    if(schoolCount > 1) {
+        if(data->count >= data->capacity) {
+            data->capacity = data->capacity == 0 ? 64 : data->capacity * 2;
+            data->winners = realloc(data->winners, data->capacity * sizeof(EnredoWinner));
+        }
+        
+        strncpy(data->winners[data->count].personName, person->personName, 255);
+        data->winners[data->count].personName[255] = '\0';
+        data->winners[data->count].schoolCount = schoolCount;
+        for(int i = 0; i < schoolCount; i++) {
+            strncpy(data->winners[data->count].schools[i], schools[i], 255);
+            data->winners[data->count].schools[i][255] = '\0';
+        }
+        data->count++;
+    }
+    
+    individualInfoFree(person);
+}
 
+void questionM(IndexerContext *indexer){
+    printf("\n=== QUESTAO M ===\n");
+    printf("Carnavalescos (Enredo) que ganharam estandartes em escolas distintas:\n\n");
+    
+    if(!indexer || !indexer->individualIndex){
+        printf("Erro: indices nao carregados\n");
+        return;
+    }
+    
+    QuestionMResultData data = {NULL, 0, 0};
+    
+    hashMapM2ForEach(indexer->individualIndex, questionMProcessCallback, &data);
+    if(data.count == 0) {
+        printf("Nnnhum carnavalesco ganhou estandarte de Enredo em escolas distintas\n\n");
+    } else {
+        for(int i = 0; i < data.count; i++) {
+            printf("%s: %d escolas (", data.winners[i].personName, data.winners[i].schoolCount);
+            for(int j = 0; j < data.winners[i].schoolCount; j++) {
+                printf("%s", data.winners[i].schools[j]);
+                if(j < data.winners[i].schoolCount - 1) printf(", ");
+            }
+            printf(")\n");
+        }
+        printf("\n");
+    }
+    
+    if(data.winners) free(data.winners);
+}
+
+void questionQ(IndexerContext *indexer){
+    printf("\n=== QUESTAO Q ===\n");
+    carnavalescoDistinctSchoolsLogic(indexer);
+}
 
 void questionO(IndexerContext *indexer){
     printf("\n=== QUESTAO O ===\n");
@@ -910,23 +1044,21 @@ static void questionPCallback(const char *key, const char *filePath, void *userD
         if(currentConsec > maxConsec) maxConsec = currentConsec;
     }
     
-    if(maxConsec >= 2){
+    if(seqCount > 0){
         for(int i = 0; i < seqCount; i++){
-            if(sequences[i].count == maxConsec){
-                char *type = (maxConsec == 2) ? "Bicampea" :
-                             (maxConsec == 3) ? "Tricampea" :
-                             (maxConsec == 4) ? "Tetracampea" :
-                             (maxConsec == 5) ? "Pentacampea" :
-                             (maxConsec == 6) ? "Hexacampea" :
-                             (maxConsec == 7) ? "Heptacampea" : "Multicampea";
-                
-                printf("%s - %s: ", school->schoolName, type);
-                for(int j = 0; j < sequences[i].count; j++){
-                    printf("%d", sequences[i].startYear + j);
-                    if(j < sequences[i].count - 1) printf(", ");
-                }
-                printf("\n");
+            char *type = (sequences[i].count == 2) ? "Bicampea" :
+                         (sequences[i].count == 3) ? "Tricampea" :
+                         (sequences[i].count == 4) ? "Tetracampea" :
+                         (sequences[i].count == 5) ? "Pentacampea" :
+                         (sequences[i].count == 6) ? "Hexacampea" :
+                         (sequences[i].count == 7) ? "Heptacampea" : "Multicampea";
+            
+            printf("%s - %s: ", school->schoolName, type);
+            for(int j = 0; j < sequences[i].count; j++){
+                printf("%d", sequences[i].startYear + j);
+                if(j < sequences[i].count - 1) printf(", ");
             }
+            printf("\n");
         }
     }
     
@@ -946,10 +1078,6 @@ void questionP(IndexerContext *indexer){
     hashMapM2ForEach(indexer->schoolIndex, questionPCallback, NULL);
     
     printf("\n");
-}
-
-void questionQ(IndexerContext *indexer){
-    questionM(indexer);
 }
 
 
