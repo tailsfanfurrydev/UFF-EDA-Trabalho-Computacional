@@ -40,17 +40,17 @@ void schoolInfoPrint(SchoolInfo* info) {
     int runnerUpCount = linkedListSize(info->runnerUpList);
     int awardCount = linkedListSize(info->awardList);
     
-    printf("titulos: %d\n", titleCount);
+    printf("Titulos: %d\n", titleCount);
     if (titleCount > 0) {
         linkedListPrint(info->titleList, (PrintFunc)championshipInfoPrint);
     }
     
-    printf("\nvices: %d\n", runnerUpCount);
+    printf("\nVices: %d\n", runnerUpCount);
     if (runnerUpCount > 0) {
         linkedListPrint(info->runnerUpList, (PrintFunc)championshipInfoPrint);
     }
     
-    printf("\mestandarte de ouro: %d\n", awardCount);
+    printf("\nEstandarte de ouro: %d\n", awardCount);
     if (awardCount > 0) {
         linkedListPrint(info->awardList, (PrintFunc)estandarteAwardPrint);
     }
