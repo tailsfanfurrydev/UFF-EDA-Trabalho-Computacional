@@ -8,15 +8,15 @@
 
 static IndexerContext* globalIndexer = NULL;
 
-int tryLoad() {
+int tryLoad(){
     globalIndexer = indexerCreate("data");
     
-    if(!globalIndexer) {
+    if(!globalIndexer){
         return 0;
     }
     
     char* testYear = indexerSearchYear(globalIndexer, 1984);
-    if(!testYear) {
+    if(!testYear){
         indexerFree(globalIndexer);
         globalIndexer = NULL;
         return 0;
@@ -26,18 +26,18 @@ int tryLoad() {
     return 1;
 }
 
-void parseAndLoadFiles() {
+void parseAndLoadFiles(){
     char campeasPath[256];
     char estandartesPath[256];
     
     printf("Campeas.txt: ");
-    if(scanf("%255s", campeasPath) != 1) {
+    if(scanf("%255s", campeasPath) != 1){
         printf("Erro ao ler caminho\n");
         return;
     }
     
     printf("Estandartes.txt: ");
-    if(scanf("%255s", estandartesPath) != 1) {
+    if(scanf("%255s", estandartesPath) != 1){
         printf("Erro ao ler caminho\n");
         return;
     }
@@ -45,35 +45,35 @@ void parseAndLoadFiles() {
     printf("\nfazendo parsing\n");
     ParserContext* parserCtx = parseAndIndex(campeasPath, estandartesPath);
     
-    if(parserCtx) {
+    if(parserCtx){
         parserContextFree(parserCtx);
         printf("parsing concluido\n");
         
-        if(tryLoad()) {
+        if(tryLoad()){
             printf("indices carregados\n");
         }
-    } else {
+    } else{
         printf("erro ao processar\n");
     }
 }
 
-void freeAll() {
-    if(globalIndexer) {
+void freeAll(){
+    if(globalIndexer){
         indexerFree(globalIndexer);
         globalIndexer = NULL;
     }
     bPlusTreeCleanupCurrentDirectory();
 }
 
-int main(int argc, char *argv[]) {
-    if(tryLoad()) {
+int main(int argc, char *argv[]){
+    if(tryLoad()){
         printf("indices encontrados\n");
-    } else {
+    } else{
         printf("indices nao encontrados. forneca os arquivos:\n");
         parseAndLoadFiles();
     }
     
-    if(!globalIndexer) {
+    if(!globalIndexer){
         printf("falha ao iniciar\n");
         return 1;
     }

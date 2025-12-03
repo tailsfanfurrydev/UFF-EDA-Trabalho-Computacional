@@ -1233,7 +1233,7 @@ static void questionVCallback(const char *key, const char *filePath, void *userD
 
 void questionV(IndexerContext *indexer){
     printf("\n=== QUESTAO V ===\n");
-    printf("escolas commais vice-campeonatos consecutivos:\n\n");
+    printf("escolas com mais vice-campeonatos consecutivos:\n\n");
     
     if(!indexer || !indexer->schoolIndex){
         printf("Erro: indices nao carregados\n");
@@ -1307,15 +1307,8 @@ void questionX(IndexerContext *indexer){
     printf("\n");
 }
 
-// ===============================================
-// QUESTAO ALL - Executa todas as questões
-// ===============================================
-
 void questionAll(IndexerContext *indexer) {
-    printf("\n");
-    printf("================================================================================\n");
-    printf("                    EXECUTANDO TODAS AS QUESTOES                               \n");
-    printf("================================================================================\n");
+    printf("\n  EXECUTANDO TODAS AS QUESTOES  \n");
     
     questionA(indexer);
     questionB(indexer);
@@ -1340,11 +1333,8 @@ void questionAll(IndexerContext *indexer) {
     questionV(indexer);
     questionX(indexer);
     
-    printf("================================================================================\n");
-    printf("                    TODAS AS QUESTOES EXECUTADAS                               \n");
-    printf("================================================================================\n\n");
+    printf("\n   TODAS AS QUESTOES EXECUTADAS   \n");
 }
-
 //finalmente
 // eu nao aguentava mais
 // chega

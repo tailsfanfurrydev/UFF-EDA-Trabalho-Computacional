@@ -26,56 +26,13 @@ static int isExtinct(const char* schoolName) {
     return strstr(schoolName, "[EXTINTA]") != NULL;
 }
 
-// Tabela de normalizacao de nomes de escolas (nome longo -> nome curto)
-static const char* normalizeSchoolName(const char* schoolName) {
-    // Estrutura de mapeamento
-    struct SchoolMapping {
-        const char* longName;
-        const char* shortName;
-    };
-    
-    static const struct SchoolMapping mappings[] = {
-        {"Estação Primeira de Mangueira", "Mangueira"},
-        {"Estacao Primeira de Mangueira", "Mangueira"},
-        {"Acadêmicos do Salgueiro", "Salgueiro"},
-        {"Academicos do Salgueiro", "Salgueiro"},
-        {"Beija-Flor de Nilópolis", "Beija-Flor"},
-        {"Beija-Flor de Nilopolis", "Beija-Flor"},
-        {"Mocidade Independente de Padre Miguel", "Mocidade"},
-        {"Imperatriz Leopoldinense", "Imperatriz"},
-        {"Unidos de Vila Isabel", "Vila Isabel"},
-        {"Unidos do Viradouro", "Viradouro"},
-        {"Acadêmicos do Grande Rio", "Grande Rio"},
-        {"Academicos do Grande Rio", "Grande Rio"},
-        {"União da Ilha do Governador", "União da Ilha"},
-        {"Uniao da Ilha do Governador", "União da Ilha"},
-        {"São Carlos (Estácio)", "Estácio de Sá"},
-        {"Sao Carlos (Estacio)", "Estácio de Sá"},
-        {"São Carlos (Estácio de Sá)", "Estácio de Sá"},
-        {NULL, NULL}
-    };
-    
-    // Procura na tabela de mapeamento
-    for(int i = 0; mappings[i].longName != NULL; i++) {
-        if(strstr(schoolName, mappings[i].longName) != NULL) {
-            return mappings[i].shortName;
-        }
-    }
-    
-    // Se não encontrou mapeamento, retorna o nome original
-    return schoolName;
-}
-
 static void cleanSchoolName(char* dest, const char* src) {
-    // Primeiro normaliza o nome (converte longo -> curto)
-    const char* normalized = normalizeSchoolName(src);
-    
-    strncpy(dest, normalized, 255);
+    strncpy(dest, src, 255);
     dest[255] = '\0';
     
-    // Remove marcador de extinta
     char* extinct = strstr(dest, " [EXTINTA]");
     if(extinct) *extinct = '\0';
+
     char* extinct2 = strstr(dest, "[EXTINTA]");
     if(extinct2) *extinct2 = '\0';
     
@@ -83,7 +40,6 @@ static void cleanSchoolName(char* dest, const char* src) {
 }
 
 static void cleanPersonName(char* name) {
-    // Remove texto entre parênteses
     char* openParen = strchr(name, '(');
     if(openParen) {
         *openParen = '\0';
@@ -118,7 +74,6 @@ static int isValidPersonName(const char* name) {
 }
 
 static int isSpecialAwardCategory(const char* category) {
-    // Categorias de prêmios especiais onde o campo "escola" é na verdade uma pessoa
     const char* specialCategories[] = {
         "Prêmio Especial",
         "Prêmio Especial (in memoriam)",
@@ -350,7 +305,6 @@ int parseEstandartes(ParserContext* context, const char* filePath) {
         category[127] = '\0';
         trim(category);
         
-        // Prêmios especiais: o campo "escola" é na verdade uma pessoa
         if(isSpecialAwardCategory(category)) {
             if(tokenCount >= 2) {
                 char personName[256];
@@ -365,7 +319,7 @@ int parseEstandartes(ParserContext* context, const char* filePath) {
                     individualInfoAddParticipation(individual, part);
                 }
             }
-            continue;  // Não cria SchoolInfo nem EstandarteAward
+            continue;
         }
         
         char schoolName[256];
@@ -394,7 +348,7 @@ int parseEstandartes(ParserContext* context, const char* filePath) {
                 char* personToken = strtok(individualName, ";");
                 while(personToken) {
                     trim(personToken);
-                    cleanPersonName(personToken);  // Remove parênteses e limpa
+                    cleanPersonName(personToken); 
                     if(strlen(personToken) > 0 && isValidPersonName(personToken)) {
                         IndividualInfo* individual = findOrCreateIndividualInfo(context, personToken);
                         Participation* part = participationCreate(schoolName, category, currentYear);
@@ -415,7 +369,6 @@ int saveAllStructures(ParserContext* context) {
     mkdir("data/YearInfo", 0755);
     mkdir("data/SchoolInfo", 0755);
     mkdir("data/IndividualInfo", 0755);
-    
     int count = 0;
     
     LinkedList* curr = context->yearInfoList;
@@ -434,7 +387,7 @@ int saveAllStructures(ParserContext* context) {
         char filename[512];
         char safeName[256];
         strncpy(safeName, info->schoolName, 255);
-        for(int i = 0; safeName[i]; i++) {
+        for(int i = 0; safeName[i]; i++) { //sanitização de nome, controle basico pra evitar problema, nao esquecer em outros arquivos
             if(safeName[i] == '/' || safeName[i] == '\\' || safeName[i] == ' ') {
                 safeName[i] = '_';
             }

@@ -13,8 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
-static void trim(char* str) {
+static void trim(char* str){
     if(!str) return;
     
     char* start = str;
@@ -24,12 +25,12 @@ static void trim(char* str) {
     while(end > start && isspace((unsigned char)*end)) end--;
     end[1] = '\0';
     
-    if(start != str) {
+    if(start != str){
         memmove(str, start, strlen(start) + 1);
     }
 }
 
-static void printHelp() {
+static void printHelp(){
     printf("\n");
     printf("COMANDOS:\n");
     printf("  print <tipo> <id>     - Mostra dados (tipo: ano, escola, individuo)\n");
@@ -41,32 +42,30 @@ static void printHelp() {
     printf("  quit | sair | q       - Sai\n");
     printf("\n");
 }
-
-static void handlePrintAno(IndexerContext *indexer, char *arg) {
-    if(!indexer || !indexer->yearIndex) {
+static void handlePrintAno(IndexerContext *indexer, char *arg){
+    if(!indexer || !indexer->yearIndex){
         printf("Erro: indice de anos nao carregado\n");
         return;
     }
-    if(strcmp(arg, "all") == 0) {
+    if(strcmp(arg, "all") == 0){
         bPlusTreePrintAll2M(indexer->yearIndex->indexFile, indexer->yearIndex->t);
         printf("\n");
-    } else {
+    } else{
         int year = atoi(arg);
-        if(year == 0) {
+        if(year == 0){
             printf("Erro: ano invalido\n");
             return;
         }
         
         char *path = indexerSearchYear(indexer, year);
-        if(!path) {
+        if(!path){
             printf("Ano %d nao encontrado\n", year);
             return;
         }
         
         YearInfo *yearInfo = yearInfoLoad(path);
         free(path);
-        
-        if(!yearInfo) {
+        if(!yearInfo){
             printf("Erro ao carregar informacoes do ano %d\n", year);
             return;
         }
@@ -76,18 +75,18 @@ static void handlePrintAno(IndexerContext *indexer, char *arg) {
     }
 }
 
-static void handlePrintEscola(IndexerContext *indexer, char *arg) {
-    if(!indexer || !indexer->schoolIndex) {
+static void handlePrintEscola(IndexerContext *indexer, char *arg){
+    if(!indexer || !indexer->schoolIndex){
         printf("Erro: indice de escolas nao carregado\n");
         return;
     }
     
-    if(strcmp(arg, "all") == 0) {
+    if(strcmp(arg, "all") == 0){
         hashMapM2PrintAll(indexer->schoolIndex);
         printf("\n");
-    } else {
+    } else{
         char *path = indexerSearchSchool(indexer, arg);
-        if(!path) {
+        if(!path){
             printf("Escola '%s' nao encontrada\n", arg);
             return;
         }
@@ -95,7 +94,7 @@ static void handlePrintEscola(IndexerContext *indexer, char *arg) {
         SchoolInfo *schoolInfo = schoolInfoLoad(path);
         free(path);
         
-        if(!schoolInfo) {
+        if(!schoolInfo){
             printf("Erro ao carregar informacoes da escola '%s'\n", arg);
             return;
         }
@@ -105,18 +104,18 @@ static void handlePrintEscola(IndexerContext *indexer, char *arg) {
     }
 }
 
-static void handlePrintIndividuo(IndexerContext *indexer, char *arg) {
-    if(!indexer || !indexer->individualIndex) {
+static void handlePrintIndividuo(IndexerContext *indexer, char *arg){
+    if(!indexer || !indexer->individualIndex){
         printf("Erro: indice de individuos nao carregado\n");
         return;
     }
     
-    if(strcmp(arg, "all") == 0) {
+    if(strcmp(arg, "all") == 0){
         hashMapM2PrintAll(indexer->individualIndex);
         printf("\n");
-    } else {
+    } else{
         char *path = indexerSearchIndividual(indexer, arg);
-        if(!path) {
+        if(!path){
             printf("Individuo '%s' nao encontrado\n", arg);
             return;
         }
@@ -124,7 +123,7 @@ static void handlePrintIndividuo(IndexerContext *indexer, char *arg) {
         IndividualInfo *individualInfo = individualInfoLoad(path);
         free(path);
         
-        if(!individualInfo) {
+        if(!individualInfo){
             printf("Erro ao carregar informacoes do individuo '%s'\n", arg);
             return;
         }
@@ -136,7 +135,7 @@ static void handlePrintIndividuo(IndexerContext *indexer, char *arg) {
 
 static void handleAddAno(IndexerContext *indexer, char *arg) {
     int year = atoi(arg);
-    if(year == 0) {
+    if(year == 0){
         printf("Erro: ano invalido\n");
         return;
     }
@@ -144,7 +143,7 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
     printf("\n=== ADICIONAR ANO %d ===\n\n", year);
     
     YearInfo *yearInfo = yearInfoCreate(year);
-    if(!yearInfo) {
+    if(!yearInfo){
         printf("Erro ao criar estrutura do ano\n");
         return;
     }
@@ -157,7 +156,7 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
     if(!fgets(input, sizeof(input), stdin)) return;
     count = atoi(input);
     
-    for(int i = 0; i < count; i++) {
+    for(int i = 0; i < count; i++){
         printf("\n--- Campeao %d ---\n", i + 1);
         
         printf("Nome da escola: ");
@@ -169,9 +168,8 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         strncpy(schoolName, input, 255);
         schoolName[255] = 0;
         
-        // Validar se a escola existe
         char *schoolPath = indexerSearchSchool(indexer, schoolName);
-        if(!schoolPath) {
+        if(!schoolPath){
             printf("ERRO: Escola '%s' nao existe!\n", schoolName);
             printf("Adicione a escola primeiro com: add escola %s\n", schoolName);
             yearInfoFree(yearInfo);
@@ -206,13 +204,13 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
     
     printf("\nQuantos vice-campeoes? ");
     fflush(stdout);
-    if(!fgets(input, sizeof(input), stdin)) {
+    if(!fgets(input, sizeof(input), stdin)){
         yearInfoFree(yearInfo);
         return;
     }
     count = atoi(input);
     
-    for(int i = 0; i < count; i++) {
+    for(int i = 0; i < count; i++){
         printf("\n--- Vice-campeao %d ---\n", i + 1);
         
         printf("Nome da escola: ");
@@ -226,7 +224,7 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         
         //existe? nao pode adicionar se nao existir
         char *schoolPath = indexerSearchSchool(indexer, schoolName);
-        if(!schoolPath) {
+        if(!schoolPath){
             printf("ERRO: Escola '%s' nao existe!\n", schoolName);
             printf("Adicione a escola primeiro com: add escola %s\n", schoolName);
             yearInfoFree(yearInfo);
@@ -265,7 +263,7 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
     yearInfoFree(yearInfo);
 }
 
-static void handleAddEscola(IndexerContext *indexer, char *arg) {
+static void handleAddEscola(IndexerContext *indexer, char *arg){
     printf("\n=== ADICIONAR ESCOLA: %s ===\n\n", arg);
     
     char input[512];
@@ -276,7 +274,7 @@ static void handleAddEscola(IndexerContext *indexer, char *arg) {
     int isActive = atoi(input);
     
     SchoolInfo *schoolInfo = schoolInfoCreate(arg, isActive);
-    if(!schoolInfo) {
+    if(!schoolInfo){
         printf("Erro ao criar estrutura da escola\n");
         return;
     }
@@ -287,11 +285,11 @@ static void handleAddEscola(IndexerContext *indexer, char *arg) {
     schoolInfoFree(schoolInfo);
 }
 
-static void handleAddIndividuo(IndexerContext *indexer, char *arg) {
+static void handleAddIndividuo(IndexerContext *indexer, char *arg){
     printf("\n=== ADICIONAR INDIVIDUO: %s ===\n\n", arg);
     
     IndividualInfo *individualInfo = individualInfoCreate(arg);
-    if(!individualInfo) {
+    if(!individualInfo){
         printf("Erro ao criar estrutura do individuo\n");
         return;
     }
@@ -300,13 +298,13 @@ static void handleAddIndividuo(IndexerContext *indexer, char *arg) {
     
     printf("Quantas participacoes adicionar? ");
     fflush(stdout);
-    if(!fgets(input, sizeof(input), stdin)) {
+    if(!fgets(input, sizeof(input), stdin)){
         individualInfoFree(individualInfo);
         return;
     }
     int count = atoi(input);
     
-    for(int i = 0; i < count; i++) {
+    for(int i = 0; i < count; i++){
         printf("\n--- Participacao %d ---\n", i + 1);
         
         printf("Nome da escola: ");
@@ -341,7 +339,7 @@ static void handleAddIndividuo(IndexerContext *indexer, char *arg) {
     individualInfoFree(individualInfo);
 }
 
-static void processCommand(IndexerContext *indexer, char *input) {
+static void processCommand(IndexerContext *indexer, char *input){
     trim(input);
     
     if(strlen(input) == 0) return;
@@ -352,89 +350,87 @@ static void processCommand(IndexerContext *indexer, char *input) {
     
     int parsed = sscanf(input, "%255s %255s %511[^\n]", command, structure, arg);
     
-    if(strcmp(command, "help") == 0) {
+    if(strcmp(command, "help") == 0){
         printHelp();
         return;
     }
     
-    if(strcmp(command, "quit") == 0 || strcmp(command, "sair") == 0 || strcmp(command, "q") == 0) {
+    if(strcmp(command, "quit") == 0 || strcmp(command, "sair") == 0 || strcmp(command, "q") == 0){
         return;
     }
     
-    if(strcmp(command, "print") == 0) {
-        if(parsed < 3) {
+    if(strcmp(command, "print") == 0){
+        if(parsed < 3){
             printf("Erro: uso incorreto. Digite 'help' para ver os comandos\n");
             return;
         }
         
         trim(arg);
         
-        if(strcmp(structure, "ano") == 0) {
+        if(strcmp(structure, "ano") == 0){
             handlePrintAno(indexer, arg);
-        } else if(strcmp(structure, "escola") == 0) {
+        } else if(strcmp(structure, "escola") == 0){
             handlePrintEscola(indexer, arg);
-        } else if(strcmp(structure, "individuo") == 0) {
+        } else if(strcmp(structure, "individuo") == 0){
             handlePrintIndividuo(indexer, arg);
-        } else {
+        } else{
             printf("Erro: estrutura '%s' nao reconhecida\n", structure);
             printf("Use: ano, escola ou individuo\n");
         }
-    } else if(strcmp(command, "remove") == 0) {
-        if(parsed < 3) {
+    } else if(strcmp(command, "remove") == 0){
+        if(parsed < 3){
             printf("Erro: uso incorreto. Digite 'help' para ver os comandos\n");
             return;
         }
         
         trim(arg);
         
-        if(strcmp(structure, "ano") == 0) {
+        if(strcmp(structure, "ano") == 0){
             int year = atoi(arg);
-            if(year == 0) {
+            if(year == 0){
                 printf("Erro: ano invalido\n");
                 return;
             }
             mutationRemoveYear(indexer, year);
-        } else if(strcmp(structure, "escola") == 0) {
+        } else if(strcmp(structure, "escola") == 0){
             mutationRemoveSchool(indexer, arg);
-        } else if(strcmp(structure, "individuo") == 0) {
+        } else if(strcmp(structure, "individuo") == 0){
             mutationRemoveIndividual(indexer, arg);
-        } else {
+        } else{
             printf("Erro: estrutura '%s' nao reconhecida\n", structure);
             printf("Use: ano, escola ou individuo\n");
         }
-    } else if(strcmp(command, "add") == 0) {
-        if(parsed < 3) {
+    } else if(strcmp(command, "add") == 0){
+        if(parsed < 3){
             printf("Erro: uso incorreto. Digite 'help' para ver os comandos\n");
             return;
         }
         
         trim(arg);
         
-        if(strcmp(structure, "ano") == 0) {
+        if(strcmp(structure, "ano") == 0){
             handleAddAno(indexer, arg);
-        } else if(strcmp(structure, "escola") == 0) {
+        } else if(strcmp(structure, "escola") == 0){
             handleAddEscola(indexer, arg);
-        } else if(strcmp(structure, "individuo") == 0) {
+        } else if(strcmp(structure, "individuo") == 0){
             handleAddIndividuo(indexer, arg);
-        } else {
+        } else{
             printf("Erro: estrutura '%s' nao reconhecida\n", structure);
             printf("Use: ano, escola ou individuo\n");
         }
-    } else if(strcmp(command, "questao") == 0) {
-        if(parsed < 2) {
+    } else if(strcmp(command, "questao") == 0){
+        if(parsed < 2){
             printf("Erro: uso incorreto. Use: questao <letra>\n");
             return;
         }
-        
-        // Verificar se é "all"
-        if(strcmp(structure, "all") == 0) {
+        if(strcmp(structure, "all") == 0){
             questionAll(indexer);
             return;
         }
         
         char letter = tolower(structure[0]);
         
-        switch(letter) {
+        switch(letter){
             case 'a': questionA(indexer); break;
             case 'b': questionB(indexer); break;
             case 'c': questionC(indexer); break;
@@ -459,40 +455,196 @@ static void processCommand(IndexerContext *indexer, char *input) {
             case 'x': questionX(indexer); break;
             default:
                 printf("Erro: questao '%c' nao existe\n", letter);
-                printf("Use letras de a-x (exceto k e w) ou 'all' para todas\n");
+                printf("Use letras de a-x (exceto k e w) ou 'all' para todas\n"); //CADE O K E O W ROSETI??? ISSO ESTA ME DEIXANDO LOUCO ASDKHASDKJASHDSAD
         }
-    } else {
+    } 
+    //no one cares about this, mas é fofo e me deixa feliz, ass: allan miguel
+    else if(strcmp(command, "miau") == 0 || strcmp(command, "meow") == 0) {
+        const char *cats[] = {
+            "\n"
+            "           __..--''``---....___   _..._    __\n"
+            " /// //_.-'    .-/\";  `        ``<._  ``.''_ `. / // /\n"
+            "///_.-' _..--.'_    \\                    `( ) ) // //\n"
+            "/ (_..-' // (< _     ;_..__               ; `' / ///\n"
+            " / // // //  `-._,_)' // / ``--...____..-' /// / //\n"
+            "Alerta C4T: gato detectado! iniciar protocolo 'cafuné'\n",
+            
+            "\n"
+            "       |\\      _,,,---,,_\n"
+            "ZZZzz /,`.-'`'    -.  ;-;;,_\n"
+            "     |,4-  ) )-,_. ,\\ (  `'-'\n"
+            "    '---''(_/--'  `-'\\_)  \n"
+            "  não acorde o mestre dos ronsrons\n",
+            
+            "\n"
+            "   |\\---/|\n"
+            "   | ,_, |\n"
+            "    \\_`_/-..----.\n"
+            " ___/ `   ' ,\"\"+ \\  sk\n"
+            "(__...'   __\\    |`.___.';\n"
+            "  (_,...'(_,.`__)/'.....+\n"
+            " mischievous thoughts\n",
+            
+            "\n"
+            "    /\\_____/\\\n"
+            "   /  o   o  \\\n"
+            "  ( ==  ^  == )\n"
+            "   )         (\n"
+            "  (           )\n"
+            " ( (  )   (  ) )\n"
+            "(__(__)___(__)__)\n"
+            " me dá petisco?\n",
+            
+            "\n"
+            "  ,-.       _,---._ __  / \\\n"
+            " /  )    .-'       `./ /   \\\n"
+            "(  (   ,'            `/    /|\n"
+            " \\  `-\"             \\'\\   / |\n"
+            "  `.              ,  \\ \\ /  |\n"
+            "   /`.          ,'-`----Y   |\n"
+            "  (            ;        |   '\n"
+            "  |  ,-.    ,-' petisco |  /\n"
+            "  |  | (   |            | /\n"
+            "  )  |  \\  `.___________|/\n"
+            "  `--'   `--'\n"
+            "ops, sem petiscos hoje!\n",
+            
+            "\n   the bug killer!!!!!\n"
+            "       _                        \n"
+            "       \\`*-.                    \n"
+            "        )  _`-.                 \n"
+            "       .  : `. .                \n"
+            "       : _   '  \\               \n"
+            "       ; *` _.   `*-._          \n"
+            "       `-.-'          `-.       \n"
+            "         ;       `       `.     \n"
+            "         :.       .        \\    \n"
+            "         . \\  .   :   .-'   .   \n"
+            "         '  `+.;  ;  '      :   \n"
+            "         :  '  |    ;       ;-. \n"
+            "         ; '   : :`-:     _.`* ;\n"
+            "[bug] .*' /  .*' ; .*`- +'  `*' \n"
+            "      `*-*   `*-*  `*-*'\n",
+            
+            "\n"
+            ".==============================================.\n"
+            "|      mewo                                    |\n"
+            "|                           .'\\                |\n"
+            "|                          //  ;               |\n"
+            "|                         /'   |               |\n"
+            "|        .----..._    _../ |   \\               |\n"
+            "|         \\'---._ `.-'      `  .'              |\n"
+            "|          `.    '              `.             |\n"
+            "|            :            _,.    '.            |\n"
+            "|            |     ,_    (() '    |            |\n"
+            "|            ;   .'(()).  '      _/__..-       |\n"
+            "|            \\ _ '       __  _.-'--._          |\n"
+            "|            ,'.'...____'::-'  \\     `'        |\n"
+            "|           / |   /         .---.              |\n"
+            "|     .-.  '  '  / ,---.   (     )             |\n"
+            "|    / /       ,' (     )---`-`-`-.._          |\n"
+            "|   : '       /  '-`-`-`..........--'\\         |\n"
+            "|   ' :      /  /                     '.       |\n"
+            "|   :  \\    |  .'         o             \\      |\n"
+            "|    \\  '  .' /          o       .       '     |\n"
+            "|     \\  `.|  :      ,    : _o--'.\\      |     |\n"
+            "|      `. /  '       ))    (   )  \\>     |     |\n"
+            "|        ;   |      ((      \\ /    \\___  |     |\n"
+            "|        ;   |      _))      `'.-'. ,-'` '     |\n"
+            "|        |    `.   ((`            |/    /      |\n"
+            "|        \\     ).  .))            '    .       |\n"
+            "|     ----`-'-'  `''.::.________:::mx'' ---    |\n"
+            "|                                              |\n"
+            "|                       glub glub              |\n"
+            "|                                              |\n"
+            ".==============================================.\n",
+            
+            "\n"
+            "⠀⢀⣤⣶⣶⣶⣆⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣒⣒⣢⣀⠀⠀⠀⠀\n"
+            "⢠⣿⣿⣿⣿⣍⣿⣿⡌⡆⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣟⣻⡎⠻⡧⠀⠀⠀\n"
+            "⠀⢿⣟⣿⣿⣿⣿⠇⢹⣸⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⡇⠀⣷⠀⠀⠀\n"
+            "⠀⠈⠻⣿⠿⠚⠋⠈⠙⠉⢀⢀⣠⣴⣄⣀⣀⠀⠈⠛⠿⣟⣀⡠⠃⠀⠀⠀\n"
+            "⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠙⢾⣥⠀⠀⠀⠙⡆⠀⠀⠀⢀⠀⢀⠀⠀⠀⠀\n"
+            "⠀⠀⡠⡪⢀⠔⠠⠂⠀⠀⠀⠀⠹⣷⣤⡶⠋⠁⠀⠊⠔⠡⠐⡁⠀⠀⠀⠀\n"
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢂⣷⣯⡡⢀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n"
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⠛⠉⠀⠀⠙⠳⡅⠀⠀⠁⡀⠀⠀⠀⠀⠀⠀\n"
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠁⠄⠀⠀⠀⠀\n"
+            "                                  \n"
+            "  brain empty, no thoughts\n",
+            
+            "\n"
+            "               )\\._.,--....,'``.      \n"
+            " .b--.        /;   _.. \\   _\\  (`._ ,.\n"
+            "`=,-,-'~~~   `----(,_..'--(,_..'`-.;.'\n",
+
+            //if only i could tell him
+            "\n"
+            "            *     ,MMM8&&&.            *\n"
+            "                  MMMM88&&&&&    .\n"
+            "                 MMMM88&&&&&&&      sometimes i feel\n"
+            "     *           MMM88&&&&&&&&        so...   lonely\n"
+            "                 MMM88&&&&&&&&     \n"
+            "            *    'MMM88&&&&&&'    thanks for staying\n"
+            "                   'MMM8&&&'      *          with me  \n"
+            "          |\\___/|     /\\___/\\\n"
+            "          )     (     )    ~( .              '\n"
+            "         =\\     /=   =\\~    /=   even if you \n"
+            "     .     )===(       ) ~ (        dont realise\n"
+            "          /     \\     /     \\          how much i love you\n"
+            "          |     |     ) ~   (\n"
+            "         /       \\   /     ~ \\\n"
+            "         \\       /   \\~     ~/\n"
+            "  cs__/\\_/\\__  _/_/\\_/\\__~__/_/\\_/\\_/\\_/\\_/\\_\n"
+            "  |  |  |  |( (  |  |  | ))  |  |  |  |  |  |\n"
+            "  |  |  |  | ) ) |  |  |//|  |  |  |  |  |  |\n"
+            "  |  |  |  |(_(  |  |  (( |  |  |  |  |  |  |\n"
+            "  |  |  |  |  |  |  |  |\\)|  |  |  |  |  |  |\n"
+            "  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |\n",
+            //he is everything for me, he'll never know it, he cant ever know it
+
+
+            "\n watchu gotta there?\n"
+            "        _._     _,-'\"\"`-._\n"
+            "     (,-.`._,'(       |\\`-/|\n"
+            "         `-.-' \\ )-`( , o o)\n"
+            "               `-    \\`_`\"'-\n"
+            
+        };
+        
+        int numCats = sizeof(cats) / sizeof(cats[0]);
+        int randomIndex = rand() % numCats;
+        printf("%s\n", cats[randomIndex]);
+    } else{
         printf("ooops, comando nao encontrado: '%s'\n", command);
         printf("escreva help para ver os comandos disponiveis\n");
     }
 }
 
-void consoleRun(IndexerContext *indexer) {
-    if(!indexer) {
+void consoleRun(IndexerContext *indexer){
+    if(!indexer){
         printf("Erro: indexer nao inicializado\n");
         return;
     }
+    srand(time(NULL));
     
     printf("\n");
     printf("▄▖▄▖▄▖▄▖▄▖▄▖▄▖▄▖  ▄ ▄▖▄▖  ▄ ▄▖▄ ▄▖▄▖\n");
     printf("▌▌▙▌▌▌▐ ▙▖▌▌▚ ▙▖  ▌▌▌▌▚   ▌▌▌▌▌▌▌▌▚ \n");
     printf("▛▌▌ ▙▌▐ ▙▖▙▌▄▌▙▖  ▙▘▙▌▄▌  ▙▘▛▌▙▘▙▌▄▌\n");
-    printf("                                    \n\n");
+    printf("Allan Miguel, Lucas Lyra, Dillan Costa\n\n");
     printf("Digite 'help' para ver os comandos\n\n");
     
     char input[1024];
     
-    while(1) {
+    while(1){
         printf("> ");
         fflush(stdout);
-        
-        if(!fgets(input, sizeof(input), stdin)) {
+        if(!fgets(input, sizeof(input), stdin)){
             break;
         }
-        
         trim(input);
         
-        if(strcmp(input, "quit") == 0 || strcmp(input, "sair") == 0 || strcmp(input, "q") == 0) {
+        if(strcmp(input, "quit") == 0 || strcmp(input, "sair") == 0 || strcmp(input, "q") == 0){
             printf("\nAdeus mundo\n\n");
             break;
         }

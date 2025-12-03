@@ -13,58 +13,59 @@
 #include <string.h>
 #include <unistd.h>
 
-static void buildYearFilePath(char *buffer, size_t bufferSize, int year) {
+
+
+static void buildYearFilePath(char *buffer, size_t bufferSize, int year){
     snprintf(buffer, bufferSize, "data/YearInfo/year-%d.dat", year);
 }
-
-static void buildSchoolFilePath(char *buffer, size_t bufferSize, const char *schoolName) {
+static void buildSchoolFilePath(char *buffer, size_t bufferSize, const char *schoolName){
     char cleanName[256];
     strncpy(cleanName, schoolName, 255);
     cleanName[255] = '\0';
     
-    for(int i = 0; cleanName[i]; i++) {
+    for(int i = 0; cleanName[i]; i++){
         if(cleanName[i] == ' ') cleanName[i] = '_';
     }
     
     snprintf(buffer, bufferSize, "data/SchoolInfo/school-%s.dat", cleanName);
 }
 
-static void buildIndividualFilePath(char *buffer, size_t bufferSize, const char *personName) {
+static void buildIndividualFilePath(char *buffer, size_t bufferSize, const char *personName){
     char cleanName[256];
     strncpy(cleanName, personName, 255);
     cleanName[255] = '\0';
     
-    for(int i = 0; cleanName[i]; i++) {
+    for(int i = 0; cleanName[i]; i++){
         if(cleanName[i] == ' ') cleanName[i] = '_';
     }
     
     snprintf(buffer, bufferSize, "data/IndividualInfo/individual-%s.dat", cleanName);
 }
 
-static LinkedList* filterListByYear(LinkedList *list, int year, int isChampionship) {
+static LinkedList* filterListByYear(LinkedList *list, int year, int isChampionship){
     LinkedList *newList = NULL;
     LinkedList *current = list;
     
-    while(current) {
+    while(current){
         int shouldKeep = 1;
         
-        if(isChampionship) {
+        if(isChampionship){
             ChampionshipInfo *info = (ChampionshipInfo*)current->info;
             if(info->year == year) shouldKeep = 0;
-        } else {
+        } else{
             EstandarteAward *award = (EstandarteAward*)current->info;
             if(award->year == year) shouldKeep = 0;
         }
         
-        if(shouldKeep) {
-            if(isChampionship) {
+        if(shouldKeep){
+            if(isChampionship){
                 ChampionshipInfo *original = (ChampionshipInfo*)current->info;
                 ChampionshipInfo *copy = championshipInfoCreate(
                     original->year, original->titleNumber, original->schoolName,
                     original->theme, original->carnivalDesigner
                 );
                 newList = linkedListInsert(newList, copy);
-            } else {
+            } else{
                 EstandarteAward *original = (EstandarteAward*)current->info;
                 EstandarteAward *copy = estandarteAwardCreate(
                     original->year, original->category, original->winner
@@ -79,14 +80,14 @@ static LinkedList* filterListByYear(LinkedList *list, int year, int isChampionsh
     return newList;
 }
 
-static LinkedList* filterParticipationsByYear(LinkedList *list, int year) {
+static LinkedList* filterParticipationsByYear(LinkedList *list, int year){
     LinkedList *newList = NULL;
     LinkedList *current = list;
     
-    while(current) {
+    while(current){
         Participation *part = (Participation*)current->info;
         
-        if(part->year != year) {
+        if(part->year != year){
             Participation *copy = participationCreate(
                 part->schoolName, part->category, part->year
             );
@@ -99,14 +100,14 @@ static LinkedList* filterParticipationsByYear(LinkedList *list, int year) {
     return newList;
 }
 
-static LinkedList* filterParticipationsBySchool(LinkedList *list, const char *schoolName) {
+static LinkedList* filterParticipationsBySchool(LinkedList *list, const char *schoolName){
     LinkedList *newList = NULL;
     LinkedList *current = list;
     
-    while(current) {
+    while(current){
         Participation *part = (Participation*)current->info;
         
-        if(strcmp(part->schoolName, schoolName) != 0) {
+        if(strcmp(part->schoolName, schoolName) != 0){
             Participation *copy = participationCreate(
                 part->schoolName, part->category, part->year
             );
@@ -119,37 +120,34 @@ static LinkedList* filterParticipationsBySchool(LinkedList *list, const char *sc
     return newList;
 }
 
-int mutationRemoveYear(IndexerContext *indexer, int year) {
+int mutationRemoveYear(IndexerContext *indexer, int year){
     if(!indexer) return 0;
     
     char yearPath[512];
     buildYearFilePath(yearPath, sizeof(yearPath), year);
     
-    if(access(yearPath, F_OK) != 0) {
+    if(access(yearPath, F_OK) != 0){
         printf("Erro ao remover: Ano %d nao existe\n", year);
         return 0;
     }
     
     YearInfo *yearInfo = yearInfoLoad(yearPath);
-    if(!yearInfo) {
+    if(!yearInfo){
         printf("Erro ao remover ano %d\n", year);
         return 0;
     }
     
-    // Remover títulos das escolas campeãs
     LinkedList *championsNode = yearInfo->champions;
-    while(championsNode) {
+    while(championsNode){
         ChampionshipInfo *champ = (ChampionshipInfo*)championsNode->info;
         
         char *schoolPath = indexerSearchSchool(indexer, champ->schoolName);
-        if(schoolPath) {
+        if(schoolPath){
             SchoolInfo *school = schoolInfoLoad(schoolPath);
-            if(school) {
+            if(school){
                 LinkedList *oldTitles = school->titleList;
                 school->titleList = filterListByYear(oldTitles, year, 1);
                 linkedListFree(oldTitles, (void(*)(void*))championshipInfoFree);
-                
-                // Remover estandartes de ouro deste ano
                 LinkedList *oldAwards = school->awardList;
                 school->awardList = filterListByYear(oldAwards, year, 0);
                 linkedListFree(oldAwards, (void(*)(void*))estandarteAwardFree);
@@ -163,20 +161,18 @@ int mutationRemoveYear(IndexerContext *indexer, int year) {
         championsNode = championsNode->next;
     }
     
-    // Remover vice-campeonatos das escolas vice-campeãs
     LinkedList *runnersUpNode = yearInfo->runnersUp;
-    while(runnersUpNode) {
+    while(runnersUpNode){
         ChampionshipInfo *runner = (ChampionshipInfo*)runnersUpNode->info;
         
         char *schoolPath = indexerSearchSchool(indexer, runner->schoolName);
-        if(schoolPath) {
+        if(schoolPath){
             SchoolInfo *school = schoolInfoLoad(schoolPath);
-            if(school) {
+            if(school){
                 LinkedList *oldRunners = school->runnerUpList;
                 school->runnerUpList = filterListByYear(oldRunners, year, 1);
                 linkedListFree(oldRunners, (void(*)(void*))championshipInfoFree);
                 
-                // Remover estandartes de ouro deste ano
                 LinkedList *oldAwards = school->awardList;
                 school->awardList = filterListByYear(oldAwards, year, 0);
                 linkedListFree(oldAwards, (void(*)(void*))estandarteAwardFree);
@@ -190,26 +186,24 @@ int mutationRemoveYear(IndexerContext *indexer, int year) {
         runnersUpNode = runnersUpNode->next;
     }
     
-    // Remover estandartes de ouro de todas as outras escolas que possam ter prêmios neste ano
     char cmdSchools[1024];
     snprintf(cmdSchools, sizeof(cmdSchools), "find data/SchoolInfo -name '*.dat' 2>/dev/null");
     FILE *fpSchools = popen(cmdSchools, "r");
-    if(fpSchools) {
+    if(fpSchools){
         char schoolPath[512];
-        while(fgets(schoolPath, sizeof(schoolPath), fpSchools)) {
+        while(fgets(schoolPath, sizeof(schoolPath), fpSchools)){
             schoolPath[strcspn(schoolPath, "\n")] = 0;
             
             SchoolInfo *school = schoolInfoLoad(schoolPath);
-            if(school) {
+            if(school){
                 LinkedList *oldAwards = school->awardList;
                 LinkedList *newAwards = filterListByYear(oldAwards, year, 0);
                 
-                // Só salva se houve mudança
-                if(linkedListSize(oldAwards) != linkedListSize(newAwards)) {
+                if(linkedListSize(oldAwards) != linkedListSize(newAwards)){
                     school->awardList = newAwards;
                     linkedListFree(oldAwards, (void(*)(void*))estandarteAwardFree);
                     schoolInfoSave(school, schoolPath);
-                } else {
+                } else{
                     linkedListFree(newAwards, (void(*)(void*))estandarteAwardFree);
                 }
                 
@@ -224,17 +218,17 @@ int mutationRemoveYear(IndexerContext *indexer, int year) {
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), "find data/IndividualInfo -name '*.dat' 2>/dev/null");
     FILE *fp = popen(cmd, "r");
-    if(fp) {
+    if(fp){
         char individualPath[512];
-        while(fgets(individualPath, sizeof(individualPath), fp)) {
+        while(fgets(individualPath, sizeof(individualPath), fp)){
             individualPath[strcspn(individualPath, "\n")] = 0;
             
             IndividualInfo *individual = individualInfoLoad(individualPath);
-            if(individual) {
+            if(individual){
                 LinkedList *oldParts = individual->participationList;
                 individual->participationList = filterParticipationsByYear(oldParts, year);
                 
-                if(oldParts != individual->participationList) {
+                if(oldParts != individual->participationList){
                     linkedListFree(oldParts, (void(*)(void*))participationFree);
                     individualInfoSave(individual, individualPath);
                 }
@@ -245,7 +239,7 @@ int mutationRemoveYear(IndexerContext *indexer, int year) {
         pclose(fp);
     }
     
-    if(unlink(yearPath) != 0) {
+    if(unlink(yearPath) != 0){
         printf("Erro ao remover ano %d\n", year);
         return 0;
     }
@@ -256,13 +250,13 @@ int mutationRemoveYear(IndexerContext *indexer, int year) {
     return 1;
 }
 
-int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName) {
+int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName){
     if(!indexer || !schoolName) return 0;
     
     char schoolPath[512];
     buildSchoolFilePath(schoolPath, sizeof(schoolPath), schoolName);
     
-    if(access(schoolPath, F_OK) != 0) {
+    if(access(schoolPath, F_OK) != 0){
         printf("Erro ao remover: Escola '%s' nao existe\n", schoolName);
         return 0;
     }
@@ -270,17 +264,17 @@ int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName) {
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), "find data/IndividualInfo -name '*.dat' 2>/dev/null");
     FILE *fp = popen(cmd, "r");
-    if(fp) {
+    if(fp){
         char individualPath[512];
-        while(fgets(individualPath, sizeof(individualPath), fp)) {
+        while(fgets(individualPath, sizeof(individualPath), fp)){
             individualPath[strcspn(individualPath, "\n")] = 0;
             
             IndividualInfo *individual = individualInfoLoad(individualPath);
-            if(individual) {
+            if(individual){
                 LinkedList *oldParts = individual->participationList;
                 individual->participationList = filterParticipationsBySchool(oldParts, schoolName);
                 
-                if(oldParts != individual->participationList) {
+                if(oldParts != individual->participationList){
                     linkedListFree(oldParts, (void(*)(void*))participationFree);
                     individualInfoSave(individual, individualPath);
                 }
@@ -291,7 +285,7 @@ int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName) {
         pclose(fp);
     }
     
-    if(unlink(schoolPath) != 0) {
+    if(unlink(schoolPath) != 0){
         printf("Erro ao remover escola '%s'\n", schoolName);
         return 0;
     }
@@ -302,40 +296,39 @@ int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName) {
     return 1;
 }
 
-int mutationRemoveIndividual(IndexerContext *indexer, const char *personName) {
+int mutationRemoveIndividual(IndexerContext *indexer, const char *personName){
     if(!indexer || !personName) return 0;
     
     char individualPath[512];
     buildIndividualFilePath(individualPath, sizeof(individualPath), personName);
     
-    if(access(individualPath, F_OK) != 0) {
+    if(access(individualPath, F_OK) != 0){
         printf("Erro ao remover: Individuo '%s' nao existe\n", personName);
         return 0;
     }
     
-    if(unlink(individualPath) != 0) {
+    if(unlink(individualPath) != 0){
         printf("Erro ao remover individuo '%s'\n", personName);
         return 0;
     }
-    
     hashMapM2Remove(indexer->individualIndex, personName);
     
     printf("Individuo '%s' removido com sucesso\n", personName);
     return 1;
 }
 
-int mutationAddYear(IndexerContext *indexer, YearInfo *yearInfo) {
+int mutationAddYear(IndexerContext *indexer, YearInfo *yearInfo){
     if(!indexer || !yearInfo) return 0;
     
     char yearPath[512];
     buildYearFilePath(yearPath, sizeof(yearPath), yearInfo->year);
     
-    if(access(yearPath, F_OK) == 0) {
+    if(access(yearPath, F_OK) == 0){
         printf("Erro ao adicionar: Ano %d ja existe\n", yearInfo->year);
         return 0;
     }
     
-    if(yearInfoSave(yearInfo, yearPath) != 0) {
+    if(yearInfoSave(yearInfo, yearPath) != 0){
         printf("Erro ao adicionar ano %d\n", yearInfo->year);
         return 0;
     }
@@ -343,13 +336,13 @@ int mutationAddYear(IndexerContext *indexer, YearInfo *yearInfo) {
     bPlusTreeInsert2M(indexer->yearIndex->indexFile, yearInfo->year, indexer->yearIndex->t);
     
     LinkedList *championsNode = yearInfo->champions;
-    while(championsNode) {
+    while(championsNode){
         ChampionshipInfo *champ = (ChampionshipInfo*)championsNode->info;
         
         char *schoolPath = indexerSearchSchool(indexer, champ->schoolName);
-        if(schoolPath) {
+        if(schoolPath){
             SchoolInfo *school = schoolInfoLoad(schoolPath);
-            if(school) {
+            if(school){
                 ChampionshipInfo *copy = championshipInfoCreate(
                     champ->year, champ->titleNumber, champ->schoolName,
                     champ->theme, champ->carnivalDesigner
@@ -365,13 +358,13 @@ int mutationAddYear(IndexerContext *indexer, YearInfo *yearInfo) {
     }
     
     LinkedList *runnersUpNode = yearInfo->runnersUp;
-    while(runnersUpNode) {
+    while(runnersUpNode){
         ChampionshipInfo *runner = (ChampionshipInfo*)runnersUpNode->info;
         
         char *schoolPath = indexerSearchSchool(indexer, runner->schoolName);
-        if(schoolPath) {
+        if(schoolPath){
             SchoolInfo *school = schoolInfoLoad(schoolPath);
-            if(school) {
+            if(school){
                 ChampionshipInfo *copy = championshipInfoCreate(
                     runner->year, runner->titleNumber, runner->schoolName,
                     runner->theme, runner->carnivalDesigner
@@ -390,18 +383,18 @@ int mutationAddYear(IndexerContext *indexer, YearInfo *yearInfo) {
     return 1;
 }
 
-int mutationAddSchool(IndexerContext *indexer, SchoolInfo *schoolInfo) {
+int mutationAddSchool(IndexerContext *indexer, SchoolInfo *schoolInfo){
     if(!indexer || !schoolInfo) return 0;
     
     char schoolPath[512];
     buildSchoolFilePath(schoolPath, sizeof(schoolPath), schoolInfo->schoolName);
     
-    if(access(schoolPath, F_OK) == 0) {
+    if(access(schoolPath, F_OK) == 0){
         printf("Erro ao adicionar: Escola '%s' ja existe\n", schoolInfo->schoolName);
         return 0;
     }
     
-    if(schoolInfoSave(schoolInfo, schoolPath) != 0) {
+    if(schoolInfoSave(schoolInfo, schoolPath) != 0){
         printf("Erro ao adicionar escola '%s'\n", schoolInfo->schoolName);
         return 0;
     }
@@ -412,18 +405,18 @@ int mutationAddSchool(IndexerContext *indexer, SchoolInfo *schoolInfo) {
     return 1;
 }
 
-int mutationAddIndividual(IndexerContext *indexer, IndividualInfo *individualInfo) {
+int mutationAddIndividual(IndexerContext *indexer, IndividualInfo *individualInfo){
     if(!indexer || !individualInfo) return 0;
     
     char individualPath[512];
     buildIndividualFilePath(individualPath, sizeof(individualPath), individualInfo->personName);
     
-    if(access(individualPath, F_OK) == 0) {
+    if(access(individualPath, F_OK) == 0){
         printf("Erro ao adicionar: Individuo '%s' ja existe\n", individualInfo->personName);
         return 0;
     }
     
-    if(individualInfoSave(individualInfo, individualPath) != 0) {
+    if(individualInfoSave(individualInfo, individualPath) != 0){
         printf("Erro ao adicionar individuo '%s'\n", individualInfo->personName);
         return 0;
     }
