@@ -3,6 +3,124 @@
 
 #include "BPlusStorage.h"
 #include "BPlusTree2M.h"
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+
+static char *currentDirectory = NULL;
+
+void bPlusTreeSetCurrentDirectory(const char *directory){
+    if (currentDirectory){
+        free(currentDirectory);
+    }
+    currentDirectory = directory ? strdup(directory) : NULL;
+}
+
+const char* bPlusTreeGetCurrentDirectory(){
+    return currentDirectory;
+}
+
+void bPlusTreeCleanupCurrentDirectory(){
+    if (currentDirectory){
+        free(currentDirectory);
+        currentDirectory = NULL;
+    }
+}
+
+char* buildFilePath(const char *directory, const char *filename){
+    size_t dirLen = strlen(directory);
+    size_t fileLen = strlen(filename);
+    size_t totalLen = dirLen + fileLen + 2;
+    
+    char *fullPath = (char*)malloc(totalLen);
+    if (!fullPath) return NULL;
+    
+    snprintf(fullPath, totalLen, "%s/%s", directory, filename);
+    return fullPath;
+}
+
+int directoryExists(const char *path){
+    struct stat st;
+    return (stat(path, &st) == 0 && S_ISDIR(st.st_mode));
+}
+
+int createDirectory(const char *path){
+    if (directoryExists(path)) return 1;
+    
+    if (mkdir(path, 0755) == 0) return 1;
+    
+    if (errno == EEXIST) return 1;
+    
+    return 0;
+}
+
+BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t){
+    if (!directoryPath || t <= 0) return NULL;
+    
+    BPlusTreeContext *context = (BPlusTreeContext*)malloc(sizeof(BPlusTreeContext));
+    if (!context) return NULL;
+    
+    context->directoryPath = strdup(directoryPath);
+    context->t = t;
+    
+    if (!createDirectory(directoryPath)){
+        free(context->directoryPath);
+        free(context);
+        return NULL;
+    }
+    
+    bPlusTreeSetCurrentDirectory(directoryPath);
+    
+    char *indexPath = buildFilePath(directoryPath, "Index.dat");
+    if (!indexPath){
+        free(context->directoryPath);
+        free(context);
+        return NULL;
+    }
+    
+    context->indexFilePath = indexPath;
+    
+    FILE *testFile = fopen(indexPath, "rb");
+    if (testFile){
+        fclose(testFile);
+        context->indexFile = fopen(indexPath, "rb+");
+    } else{
+        context->indexFile = fopen(indexPath, "wb+");
+        if (context->indexFile){
+            int fileCounter = 0;
+            long root = HEADER_SIZE;
+            
+            fwrite(&fileCounter, sizeof(int), 1, context->indexFile);
+            fwrite(&root, sizeof(long), 1, context->indexFile);
+            
+            BPlusTree2M *firstNode = bPlusTreeCreate2M(t);
+            writeIndexNode(context->indexFile, firstNode, root);
+            bPlusTreeFree2M(firstNode);
+            fflush(context->indexFile);
+        }
+    }
+    
+    if (!context->indexFile){
+        free(context->indexFilePath);
+        free(context->directoryPath);
+        free(context);
+        return NULL;
+    }
+    
+    return context;
+}
+
+void bPlusTreeContextFree(BPlusTreeContext *context){
+    if (context){
+        if (context->indexFile){
+            fflush(context->indexFile);
+            fclose(context->indexFile);
+        }
+        free(context->indexFilePath);
+        free(context->directoryPath);
+        free(context);
+    }
+}
 
 char *nameToFile(char *fileName){
 
@@ -11,6 +129,17 @@ char *nameToFile(char *fileName){
     strcat(str, ".dat");
 
     return str;
+}
+
+char *nameToFileInDirectory(char *fileName, const char *directory){
+    char *baseName = nameToFile(fileName);
+    if (!baseName) return NULL;
+    
+    if (!directory) return baseName;
+    
+    char *fullPath = buildFilePath(directory, baseName);
+    free(baseName);
+    return fullPath;
 }
 
 char *newFileName(FILE *indexFile){
@@ -42,7 +171,7 @@ long bPlusTree2MSizeInDisk(int t){
 
 long getRootOffset(FILE *indexFile){
     long root;
-    if(!indexFile) {
+    if(!indexFile){
         printf("getRootOffset: indexFile NULL\n");
         exit(1);
     }

@@ -18,5 +18,7 @@ int schoolInfoCompare(SchoolInfo* a, SchoolInfo* b);
 void schoolInfoAddTitle(SchoolInfo* info, void* championshipInfo);
 void schoolInfoAddRunnerUp(SchoolInfo* info, void* championshipInfo);
 void schoolInfoAddAward(SchoolInfo* info, void* estandarteAward);
+int schoolInfoSave(SchoolInfo* info, const char* filepath);
+SchoolInfo* schoolInfoLoad(const char* filepath);
 
 #endif

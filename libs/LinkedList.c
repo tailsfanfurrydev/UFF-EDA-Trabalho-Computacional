@@ -10,7 +10,6 @@ LinkedList* linkedListInsert(LinkedList *l, void *elem){
   new->info = elem;
   return new;
 }
-
 void linkedListInsertVoid(LinkedList **l, void *elem){
   LinkedList *new = (LinkedList *) malloc(sizeof(LinkedList));
   new->next = *l;

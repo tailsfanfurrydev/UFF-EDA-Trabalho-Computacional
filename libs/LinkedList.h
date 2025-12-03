@@ -1,3 +1,6 @@
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -23,3 +26,5 @@ void linkedListFreeRecursive(LinkedList *l, FreeFunc freeData);
 LinkedList* linkedListSearchRecursive(LinkedList *l, void *elem, CompareFunc compare);
 LinkedList* linkedListRemoveRecursive(LinkedList *l, void *elem, CompareFunc compare, FreeFunc freeData);
 int linkedListSize(LinkedList *l);
+
+#endif

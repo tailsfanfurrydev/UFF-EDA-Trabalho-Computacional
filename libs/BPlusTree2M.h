@@ -1,7 +1,6 @@
 #ifndef B_PLUS_TREE_2_M_H
 #define B_PLUS_TREE_2_M_H
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -17,18 +16,21 @@ typedef struct leafnode{
   char *nextLeafFile, **YearFileArray;
 }LeafNode;
 
-BPlusTree2M *bPlusTreeCreate2M(int t);        
-BPlusTree2M *bPlusTreeInitialize2M(void);     
+BPlusTree2M *bPlusTreeCreate2M(int t);
+BPlusTree2M *bPlusTreeInitialize2M(void);
 char *bPlusTreeSearch2M(FILE *indexFileP, int k, long offset);
 int bPlusTreeInsert2M(FILE *indexFile, int key, int t);
-void bPlusTreeFree2M(BPlusTree2M *a);        
-void bPlusTreePrintNode2M(BPlusTree2M *a);   
+int bPlusTreeRemove2M(FILE *indexFile, int key, int t);
+char **bPlusTreeRangeSearch2M(FILE *indexFile, int minKey, int maxKey, int *resultCount);
+void bPlusTreeFree2M(BPlusTree2M *a);
+void bPlusTreePrintNode2M(BPlusTree2M *a);
+void bPlusTreePrintAll2M(FILE *indexFile, int t);
 
-
+typedef void (*BPlusTreeIteratorCallback)(int year, const char *filePath, void *userData);
+void bPlusTreeForEach(FILE *indexFile, int t, BPlusTreeIteratorCallback callback, void *userData);
 
 void leafNodePrint(LeafNode *l);
-LeafNode *leafNodeCreate2M(int t);     
-void leafNodeFree2M(LeafNode *l);      
-
+LeafNode *leafNodeCreate2M(int t);
+void leafNodeFree2M(LeafNode *l);
 
 #endif

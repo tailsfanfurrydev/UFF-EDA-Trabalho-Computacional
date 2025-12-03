@@ -12,5 +12,7 @@ void individualInfoFree(IndividualInfo* info);
 void individualInfoPrint(IndividualInfo* info);
 int individualInfoCompare(IndividualInfo* a, IndividualInfo* b);
 void individualInfoAddParticipation(IndividualInfo* info, void* participation);
+int individualInfoSave(IndividualInfo* info, const char* filepath);
+IndividualInfo* individualInfoLoad(const char* filepath);
 
 #endif
