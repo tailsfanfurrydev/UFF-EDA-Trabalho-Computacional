@@ -1,5 +1,5 @@
-#ifndef HASH_MAP_M2_H
-#define HASH_MAP_M2_H
+#ifndef HASH_MAP_2M_H
+#define HASH_MAP_2M_H
 
 #include <stdio.h>
 #include <stdlib.h>

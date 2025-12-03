@@ -18,7 +18,7 @@ set(LIB_SOURCES
         libs/BPlusStorage.c
         libs/HashUtils.c
         libs/HashMap.c
-        libs/HashMapM2.c
+        libs/HashMap2M.c
 )
 set(LIB_HEADERS
         libs/BinaryTree.h
@@ -31,7 +31,7 @@ set(LIB_HEADERS
         libs/BPlusStorage.h
         libs/HashUtils.h
         libs/HashMap.h
-        libs/HashMapM2.h
+        libs/HashMap2M.h
 )
 
 #inclua src aqui

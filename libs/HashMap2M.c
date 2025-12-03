@@ -1,5 +1,5 @@
 #include "LinkedList.h"
-#include "HashMapM2.h"
+#include "HashMap2M.h"
 #include <sys/stat.h>
 #include <unistd.h>
 

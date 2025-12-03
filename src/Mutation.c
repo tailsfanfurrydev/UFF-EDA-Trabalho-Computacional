@@ -7,7 +7,7 @@
 #include "models/Participation.h"
 #include "models/EstandarteAward.h"
 #include "../libs/BPlusTree2M.h"
-#include "../libs/HashMapM2.h"
+#include "../libs/HashMap2M.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

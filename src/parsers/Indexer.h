@@ -4,7 +4,7 @@
 #include "Parser.h"
 #include "../../libs/BPlusTree2M.h"
 #include "../../libs/BPlusStorage.h"
-#include "../../libs/HashMapM2.h"
+#include "../../libs/HashMap2M.h"
 
 typedef struct {
     BPlusTreeContext* yearIndex;
