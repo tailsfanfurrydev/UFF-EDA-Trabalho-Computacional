@@ -119,6 +119,27 @@ static LinkedList* filterParticipationsBySchool(LinkedList *list, const char *sc
     
     return newList;
 }
+//remover dados tambem da yeatr ok?
+static LinkedList* filterChampionshipsBySchool(LinkedList *list, const char *schoolName){
+    LinkedList *newList = NULL;
+    LinkedList *current = list;
+    
+    while(current){
+        ChampionshipInfo *champ = (ChampionshipInfo*)current->info;
+        
+        if(strcmp(champ->schoolName, schoolName) != 0){
+            ChampionshipInfo *copy = championshipInfoCreate(
+                champ->year, champ->titleNumber, champ->schoolName,
+                champ->theme, champ->carnivalDesigner
+            );
+            newList = linkedListInsert(newList, copy);
+        }
+        
+        current = current->next;
+    }
+    
+    return newList;
+}
 
 int mutationRemoveYear(IndexerContext *indexer, int year){
     if(!indexer) return 0;
@@ -262,27 +283,74 @@ int mutationRemoveSchool(IndexerContext *indexer, const char *schoolName){
     }
     
     char cmd[1024];
+    
+    snprintf(cmd, sizeof(cmd), "find data/YearInfo -name '*.dat' 2>/dev/null");
+    FILE *fpYears = popen(cmd, "r");
+    if(fpYears){
+        char yearPath[512];
+        while(fgets(yearPath, sizeof(yearPath), fpYears)){
+            yearPath[strcspn(yearPath, "\n")] = 0;
+            
+            YearInfo *yearInfo = yearInfoLoad(yearPath);
+            if(yearInfo){
+                int modified = 0;
+                
+                LinkedList *oldChampions = yearInfo->champions;
+                LinkedList *newChampions = filterChampionshipsBySchool(oldChampions, schoolName);
+                
+                if(linkedListSize(oldChampions) != linkedListSize(newChampions)){
+                    yearInfo->champions = newChampions;
+                    linkedListFree(oldChampions, (void(*)(void*))championshipInfoFree);
+                    modified = 1;
+                } else{
+                    linkedListFree(newChampions, (void(*)(void*))championshipInfoFree);
+                }
+                
+                LinkedList *oldRunnersUp = yearInfo->runnersUp;
+                LinkedList *newRunnersUp = filterChampionshipsBySchool(oldRunnersUp, schoolName);
+                
+                if(linkedListSize(oldRunnersUp) != linkedListSize(newRunnersUp)){
+                    yearInfo->runnersUp = newRunnersUp;
+                    linkedListFree(oldRunnersUp, (void(*)(void*))championshipInfoFree);
+                    modified = 1;
+                } else{
+                    linkedListFree(newRunnersUp, (void(*)(void*))championshipInfoFree);
+                }
+                
+                if(modified){
+                    yearInfoSave(yearInfo, yearPath);
+                }
+                
+                yearInfoFree(yearInfo);
+            }
+        }
+        pclose(fpYears);
+    }
+    
     snprintf(cmd, sizeof(cmd), "find data/IndividualInfo -name '*.dat' 2>/dev/null");
-    FILE *fp = popen(cmd, "r");
-    if(fp){
+    FILE *fpIndividuals = popen(cmd, "r");
+    if(fpIndividuals){
         char individualPath[512];
-        while(fgets(individualPath, sizeof(individualPath), fp)){
+        while(fgets(individualPath, sizeof(individualPath), fpIndividuals)){
             individualPath[strcspn(individualPath, "\n")] = 0;
             
             IndividualInfo *individual = individualInfoLoad(individualPath);
             if(individual){
                 LinkedList *oldParts = individual->participationList;
-                individual->participationList = filterParticipationsBySchool(oldParts, schoolName);
+                LinkedList *newParts = filterParticipationsBySchool(oldParts, schoolName);
                 
-                if(oldParts != individual->participationList){
+                if(linkedListSize(oldParts) != linkedListSize(newParts)){
+                    individual->participationList = newParts;
                     linkedListFree(oldParts, (void(*)(void*))participationFree);
                     individualInfoSave(individual, individualPath);
+                } else{
+                    linkedListFree(newParts, (void(*)(void*))participationFree);
                 }
                 
                 individualInfoFree(individual);
             }
         }
-        pclose(fp);
+        pclose(fpIndividuals);
     }
     
     if(unlink(schoolPath) != 0){
