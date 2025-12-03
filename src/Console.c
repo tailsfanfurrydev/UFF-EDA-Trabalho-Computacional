@@ -1,5 +1,6 @@
 #include "Console.h"
 #include "Mutation.h"
+#include "Questionary.h"
 #include "models/YearInfo.h"
 #include "models/SchoolInfo.h"
 #include "models/IndividualInfo.h"
@@ -29,16 +30,16 @@ static void trim(char* str) {
 }
 
 static void printHelp() {
-    printf("\nComandos disponiveis:\n");
-    printf("  print <ano|escola|individuo> <all|nome>\n");
-    printf("  add ano <ano>               - Adiciona um ano \n");
-    printf("  add escola <nome>           - Adiciona uma escola \n");
-    printf("  add individuo <nome>        - Adiciona um individuo\n");
-    printf("  remove ano <ano>            - Remove um ano\n");
-    printf("  remove escola <nome>        - Remove uma escola\n");
-    printf("  remove individuo <nome>     - Remove um individuo\n");
-    printf("  help                        - Esta mensagem\n");
-    printf("  quit | sair | q             - Encerra o programa\n\n");
+    printf("\n");
+    printf("COMANDOS:\n");
+    printf("  print <tipo> <id>     - Mostra dados (tipo: ano, escola, individuo)\n");
+    printf("  print <tipo> all      - Lista todos\n");
+    printf("  add <tipo> <id>       - Adiciona novo\n");
+    printf("  remove <tipo> <id>    - Remove existente\n");
+    printf("  questao <letra>       - Executa questao (a-x ou 'all')\n");
+    printf("  help                  - Mostra ajuda\n");
+    printf("  quit | sair | q       - Sai\n");
+    printf("\n");
 }
 
 static void handlePrintAno(IndexerContext *indexer, char *arg) {
@@ -140,7 +141,7 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         return;
     }
     
-    printf("\n=== Adicionando ano %d ===\n", year);
+    printf("\n=== ADICIONAR ANO %d ===\n\n", year);
     
     YearInfo *yearInfo = yearInfoCreate(year);
     if(!yearInfo) {
@@ -167,6 +168,16 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         char schoolName[256];
         strncpy(schoolName, input, 255);
         schoolName[255] = 0;
+        
+        // Validar se a escola existe
+        char *schoolPath = indexerSearchSchool(indexer, schoolName);
+        if(!schoolPath) {
+            printf("ERRO: Escola '%s' nao existe!\n", schoolName);
+            printf("Adicione a escola primeiro com: add escola %s\n", schoolName);
+            yearInfoFree(yearInfo);
+            return;
+        }
+        free(schoolPath);
         
         printf("Numero do titulo: ");
         fflush(stdout);
@@ -213,6 +224,16 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         strncpy(schoolName, input, 255);
         schoolName[255] = 0;
         
+        //existe? nao pode adicionar se nao existir
+        char *schoolPath = indexerSearchSchool(indexer, schoolName);
+        if(!schoolPath) {
+            printf("ERRO: Escola '%s' nao existe!\n", schoolName);
+            printf("Adicione a escola primeiro com: add escola %s\n", schoolName);
+            yearInfoFree(yearInfo);
+            return;
+        }
+        free(schoolPath);
+        
         printf("Numero do titulo: ");
         fflush(stdout);
         if(!fgets(input, sizeof(input), stdin)) break;
@@ -238,15 +259,14 @@ static void handleAddAno(IndexerContext *indexer, char *arg) {
         yearInfoAddRunnerUp(yearInfo, runner);
     }
     
-    if(mutationAddYear(indexer, yearInfo)) {
-       // printf("\nAno %d adicionado com sucesso!\n", year);
-    }
+    printf("\n");
+    mutationAddYear(indexer, yearInfo);
     
     yearInfoFree(yearInfo);
 }
 
 static void handleAddEscola(IndexerContext *indexer, char *arg) {
-    printf("\n=== Adicionando escola '%s' ===\n", arg);
+    printf("\n=== ADICIONAR ESCOLA: %s ===\n\n", arg);
     
     char input[512];
     
@@ -261,133 +281,14 @@ static void handleAddEscola(IndexerContext *indexer, char *arg) {
         return;
     }
     
-    printf("\nQuantos titulos adicionar? ");
-    fflush(stdout);
-    if(!fgets(input, sizeof(input), stdin)) {
-        schoolInfoFree(schoolInfo);
-        return;
-    }
-    int count = atoi(input);
-    
-    for(int i = 0; i < count; i++) {
-        printf("\n--- Titulo %d ---\n", i + 1);
-        
-        printf("Ano: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        int year = atoi(input);
-        
-        printf("Numero do titulo: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        int titleNum = atoi(input);
-        
-        printf("Tema/Enredo: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char theme[256];
-        strncpy(theme, input, 255);
-        theme[255] = 0;
-        
-        printf("Carnavalesco: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char designer[256];
-        strncpy(designer, input, 255);
-        designer[255] = 0;
-        
-        ChampionshipInfo *title = championshipInfoCreate(year, titleNum, arg, theme, designer);
-        schoolInfoAddTitle(schoolInfo, title);
-    }
-    
-    printf("\nQuantos vice-campeonatos adicionar? ");
-    fflush(stdout);
-    if(!fgets(input, sizeof(input), stdin)) {
-        schoolInfoFree(schoolInfo);
-        return;
-    }
-    count = atoi(input);
-    
-    for(int i = 0; i < count; i++) {
-        printf("\n--- Vice-campeonato %d ---\n", i + 1);
-        
-        printf("Ano: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        int year = atoi(input);
-        
-        printf("Numero do titulo: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        int titleNum = atoi(input);
-        
-        printf("Tema/Enredo: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char theme[256];
-        strncpy(theme, input, 255);
-        theme[255] = 0;
-        
-        printf("Carnavalesco: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char designer[256];
-        strncpy(designer, input, 255);
-        designer[255] = 0;
-        
-        ChampionshipInfo *runner = championshipInfoCreate(year, titleNum, arg, theme, designer);
-        schoolInfoAddRunnerUp(schoolInfo, runner);
-    }
-    
-    printf("\nQuantos premios Estandarte de Ouro adicionar? ");
-    fflush(stdout);
-    if(!fgets(input, sizeof(input), stdin)) {
-        schoolInfoFree(schoolInfo);
-        return;
-    }
-    count = atoi(input);
-    
-    for(int i = 0; i < count; i++) {
-        printf("\n--- Premio %d ---\n", i + 1);
-        
-        printf("Ano: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        int year = atoi(input);
-        
-        printf("Categoria: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char category[128];
-        strncpy(category, input, 127);
-        category[127] = 0;
-        
-        printf("Vencedor: ");
-        fflush(stdout);
-        if(!fgets(input, sizeof(input), stdin)) break;
-        input[strcspn(input, "\n")] = 0;
-        char winner[256];
-        strncpy(winner, input, 255);
-        winner[255] = 0;
-        
-        EstandarteAward *award = estandarteAwardCreate(year, category, winner);
-        schoolInfoAddAward(schoolInfo, award);
-    }
-    
-    if(mutationAddSchool(indexer, schoolInfo)) {
-       // printf("\nEscola '%s' adicionada com sucesso!\n", arg);
-    }
+    printf("\n");
+    mutationAddSchool(indexer, schoolInfo);
     
     schoolInfoFree(schoolInfo);
 }
 
 static void handleAddIndividuo(IndexerContext *indexer, char *arg) {
-    printf("\n=== Adicionando individuo '%s' ===\n", arg);
+    printf("\n=== ADICIONAR INDIVIDUO: %s ===\n\n", arg);
     
     IndividualInfo *individualInfo = individualInfoCreate(arg);
     if(!individualInfo) {
@@ -434,9 +335,8 @@ static void handleAddIndividuo(IndexerContext *indexer, char *arg) {
         individualInfoAddParticipation(individualInfo, part);
     }
     
-    if(mutationAddIndividual(indexer, individualInfo)) {
-       // printf("\nIndividuo '%s' adicionado com sucesso!\n", arg);
-    }
+    printf("\n");
+    mutationAddIndividual(indexer, individualInfo);
     
     individualInfoFree(individualInfo);
 }
@@ -520,6 +420,47 @@ static void processCommand(IndexerContext *indexer, char *input) {
             printf("Erro: estrutura '%s' nao reconhecida\n", structure);
             printf("Use: ano, escola ou individuo\n");
         }
+    } else if(strcmp(command, "questao") == 0) {
+        if(parsed < 2) {
+            printf("Erro: uso incorreto. Use: questao <letra>\n");
+            return;
+        }
+        
+        // Verificar se é "all"
+        if(strcmp(structure, "all") == 0) {
+            questionAll(indexer);
+            return;
+        }
+        
+        char letter = tolower(structure[0]);
+        
+        switch(letter) {
+            case 'a': questionA(indexer); break;
+            case 'b': questionB(indexer); break;
+            case 'c': questionC(indexer); break;
+            case 'd': questionD(indexer); break;
+            case 'e': questionE(indexer); break;
+            case 'f': questionF(indexer); break;
+            case 'g': questionG(indexer); break;
+            case 'h': questionH(indexer); break;
+            case 'i': questionI(indexer); break;
+            case 'j': questionJ(indexer); break;
+            case 'l': questionL(indexer); break;
+            case 'm': questionM(indexer); break;
+            case 'n': questionN(indexer); break;
+            case 'o': questionO(indexer); break;
+            case 'p': questionP(indexer); break;
+            case 'q': questionQ(indexer); break;
+            case 'r': questionR(indexer); break;
+            case 's': questionS(indexer); break;
+            case 't': questionT(indexer); break;
+            case 'u': questionU(indexer); break;
+            case 'v': questionV(indexer); break;
+            case 'x': questionX(indexer); break;
+            default:
+                printf("Erro: questao '%c' nao existe\n", letter);
+                printf("Use letras de a-x (exceto k e w) ou 'all' para todas\n");
+        }
     } else {
         printf("ooops, comando nao encontrado: '%s'\n", command);
         printf("escreva help para ver os comandos disponiveis\n");
@@ -532,8 +473,12 @@ void consoleRun(IndexerContext *indexer) {
         return;
     }
     
-    printf("\nHello World :3\n");
-    printf("escreva help para ver os comandos disponiveis\n\n");
+    printf("\n");
+    printf("▄▖▄▖▄▖▄▖▄▖▄▖▄▖▄▖  ▄ ▄▖▄▖  ▄ ▄▖▄ ▄▖▄▖\n");
+    printf("▌▌▙▌▌▌▐ ▙▖▌▌▚ ▙▖  ▌▌▌▌▚   ▌▌▌▌▌▌▌▌▚ \n");
+    printf("▛▌▌ ▙▌▐ ▙▖▙▌▄▌▙▖  ▙▘▙▌▄▌  ▙▘▛▌▙▘▙▌▄▌\n");
+    printf("                                    \n\n");
+    printf("Digite 'help' para ver os comandos\n\n");
     
     char input[1024];
     
@@ -548,7 +493,7 @@ void consoleRun(IndexerContext *indexer) {
         trim(input);
         
         if(strcmp(input, "quit") == 0 || strcmp(input, "sair") == 0 || strcmp(input, "q") == 0) {
-            printf("goodbye beautyful world\n");
+            printf("\nAdeus mundo\n\n");
             break;
         }
         

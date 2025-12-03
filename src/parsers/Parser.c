@@ -26,13 +26,59 @@ static int isExtinct(const char* schoolName) {
     return strstr(schoolName, "[EXTINTA]") != NULL;
 }
 
+// Tabela de normalizacao de nomes de escolas (nome longo -> nome curto)
+static const char* normalizeSchoolName(const char* schoolName) {
+    // Estrutura de mapeamento
+    struct SchoolMapping {
+        const char* longName;
+        const char* shortName;
+    };
+    
+    static const struct SchoolMapping mappings[] = {
+        {"Estação Primeira de Mangueira", "Mangueira"},
+        {"Estacao Primeira de Mangueira", "Mangueira"},
+        {"Acadêmicos do Salgueiro", "Salgueiro"},
+        {"Academicos do Salgueiro", "Salgueiro"},
+        {"Beija-Flor de Nilópolis", "Beija-Flor"},
+        {"Beija-Flor de Nilopolis", "Beija-Flor"},
+        {"Mocidade Independente de Padre Miguel", "Mocidade"},
+        {"Imperatriz Leopoldinense", "Imperatriz"},
+        {"Unidos de Vila Isabel", "Vila Isabel"},
+        {"Unidos do Viradouro", "Viradouro"},
+        {"Acadêmicos do Grande Rio", "Grande Rio"},
+        {"Academicos do Grande Rio", "Grande Rio"},
+        {"União da Ilha do Governador", "União da Ilha"},
+        {"Uniao da Ilha do Governador", "União da Ilha"},
+        {"São Carlos (Estácio)", "Estácio de Sá"},
+        {"Sao Carlos (Estacio)", "Estácio de Sá"},
+        {"São Carlos (Estácio de Sá)", "Estácio de Sá"},
+        {NULL, NULL}
+    };
+    
+    // Procura na tabela de mapeamento
+    for(int i = 0; mappings[i].longName != NULL; i++) {
+        if(strstr(schoolName, mappings[i].longName) != NULL) {
+            return mappings[i].shortName;
+        }
+    }
+    
+    // Se não encontrou mapeamento, retorna o nome original
+    return schoolName;
+}
+
 static void cleanSchoolName(char* dest, const char* src) {
-    strncpy(dest, src, 255);
+    // Primeiro normaliza o nome (converte longo -> curto)
+    const char* normalized = normalizeSchoolName(src);
+    
+    strncpy(dest, normalized, 255);
     dest[255] = '\0';
+    
+    // Remove marcador de extinta
     char* extinct = strstr(dest, " [EXTINTA]");
     if(extinct) *extinct = '\0';
     char* extinct2 = strstr(dest, "[EXTINTA]");
     if(extinct2) *extinct2 = '\0';
+    
     trim(dest);
 }
 
@@ -102,6 +148,7 @@ static int isPersonCategory(const char* category) {
         "Personalidade Feminina",
         "Personalidade Masculina",
         "Revelação",
+        "Bateria",
         NULL
     };
     

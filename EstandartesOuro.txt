@@ -8,7 +8,7 @@ Enredo 	Império Serrano 	"Alô, Alô, Taí Carmen Miranda" -> Fernando Pinto
 Fantasias 	Império Serrano 	Fernando Pinto
 Mestre-sala 	Mangueira 	Zequinha
 Porta-bandeira 	Mangueira 	Neide da Mangueira
-Samba-enredo 	São Carlos (Estácio) 	"Rio Grande do Sul, na Festa do Preto Forro" -> Nilo Mandes; Dario Marciano
+Samba-enredo 	Estácio de Sá 	"Rio Grande do Sul, na Festa do Preto Forro" -> Nilo Mandes; Dario Marciano
 1973
 Ala 	Mangueira 	Ala de Baianas
 Bateria 	Salgueiro 	Mestre Louro
@@ -35,7 +35,7 @@ Mestre-sala 	Portela 	Bagdá
 Porta-bandeira 	Mangueira 	Neide da Mangueira
 Samba-enredo 	Mocidade 	"A Festa do Divino" -> Campo Grande; Nezinho; Tatu
 1975
-Ala 	São Carlos (Estácio) 	Ala de Baianas
+Ala 	Estácio de Sá 	Ala de Baianas
 Bateria 	Salgueiro 	Mestre Louro
 Comunicação com o público 	Império Serrano
 Destaque Feminino 	Mangueira 	Dona Neuma
@@ -91,10 +91,10 @@ Revelação 	Arranco 	Jorge Picapau (Jovem ritmista)
 Samba-enredo 	Salgueiro 	"Do Yorubá à Luz, a Aurora dos Deuses" -> Renato de Verdade
 1979
 Ala 	Portela 	Velha Guarda da Portela
-Bateria 	São Carlos (Estácio) 	Nelson Bragança, o "Maestro Galo"
+Bateria 	Estácio de Sá 	Nelson Bragança, o "Maestro Galo"
 Comunicação com o público 	União da Ilha
 Destaque Feminino 	Mangueira 	Zinha
-Destaque Masculino 	São Carlos (Estácio) 	Bicho Novo
+Destaque Masculino 	Estácio de Sá 	Bicho Novo
 Enredo 	Mocidade 	"O Descobrimento do Brasil" -> Arlindo Rodrigues
 Melhor Escola 	Portela
 Mestre-sala 	Beija-Flor 	Élcio PV
@@ -103,7 +103,7 @@ Passista Masculino 	Portela 	Marcelo
 Personalidade Feminina 	Salgueiro 	Dona Maria Romana
 Personalidade Masculina 	Mangueira 	Pelado da Mangueira (Compositor)
 Porta-bandeira 	Portela 	Vilma Nascimento
-Revelação 	São Carlos (Estácio) 	Rosângela Monteiro de Souza (Passista de 16 anos que desfilou como Rainha da Bateria)
+Revelação 	Estácio de Sá 	Rosângela Monteiro de Souza (Passista de 16 anos que desfilou como Rainha da Bateria)
 Samba-enredo 	Portela 	"Incrível, Fantástico, Extraordinário" -> David Corrêa; J. Rodrigues; Tião Nascimento
 1980
 Ala 	Império Serrano 	"Sente o Drama"
@@ -120,7 +120,7 @@ Passista Masculino 	Imperatriz 	Vitamina
 Personalidade Feminina 	Império Serrano 	Vovó Maria Joana (Uma das fundadoras da escola)
 Personalidade Masculina 	Vila Isabel 	Mestre Trambique (Diretor de bateria da escola)
 Porta-bandeira 	Mangueira 	Mocinha
-Revelação 	São Carlos (Estácio de Sá);Julinho (Segundo mestre-sala da escola)
+Revelação 	Estácio de Sá
 Samba-enredo 	Vila Isabel 	"Sonho de Um Sonho" -> Martinho da Vila; Rodolpho de Souza; Graúna
 1981
 Ala 	Mocidade 	Ala de Baianas
@@ -144,7 +144,7 @@ Bateria 	Império Serrano 	Mestre Natalino
 Comissão de Frente 	Portela
 Comunicação com o público 	Império Serrano
 Destaque Feminino 	União da Ilha 	Vilma Nascimento
-Destaque Masculino 	São Carlos (Estácio de Sá);Zeca da Cuíca
+Destaque Masculino 	Estácio de Sá
 Enredo 	Império Serrano 	"Bumbum Paticumbum Prugurundum" -> Fernando Pamplona; Rosa Magalhães; Lícia Lacerda
 Intérprete 	Mangueira 	Jamelão
 Mestre-sala 	Mangueira 	Delegado
@@ -387,7 +387,7 @@ Passista Masculino 	Estácio de Sá 	Luciano Lacraia
 Personalidade 	Mangueira 	Leci Brandão
 Porta-bandeira 	Império Serrano 	Rita Freitas
 Revelação 	Porto da Pedra
-Samba-enredo 	Imperatriz 	"Imperatriz Leopoldinense Honrosamente Apresenta Leopoldina, a Imperatriz do Brasil" -> Carlinhos China; Demarco; Dominguinhos do Estácio; Jurandir 
+Samba-enredo 	Imperatriz 	"Imperatriz Honrosamente Apresenta Leopoldina, a Imperatriz do Brasil" -> Carlinhos China; Demarco; Dominguinhos do Estácio; Jurandir 
 1997
 Ala 	Beija-Flor 	Ala das Baianinhas
 Ala de Baianas 	Imperatriz
@@ -556,7 +556,7 @@ Samba-enredo 	Beija-Flor 	"Áfricas - Do Berço Real à Corte Brasiliana" -> Cl�
 2008
 Ala 	Salgueiro 	"A Era do Rádio"
 Ala de Baianas 	Mocidade
-Bateria 	Acadêmicos do Salgueiro 	Mestre Marcão
+Bateria 	Salgueiro 	Mestre Marcão
 Comissão de Frente 	Mocidade 	Fábio de Mello (Coreógrafo)
 Enredo 	Imperatriz 	"João e Marias" -> Rosa Magalhães
 Intérprete 	Mocidade 	Bruno Ribas

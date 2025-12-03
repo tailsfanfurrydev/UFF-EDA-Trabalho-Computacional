@@ -26,6 +26,9 @@ void bPlusTreeFree2M(BPlusTree2M *a);
 void bPlusTreePrintNode2M(BPlusTree2M *a);
 void bPlusTreePrintAll2M(FILE *indexFile, int t);
 
+typedef void (*BPlusTreeIteratorCallback)(int year, const char *filePath, void *userData);
+void bPlusTreeForEach(FILE *indexFile, int t, BPlusTreeIteratorCallback callback, void *userData);
+
 void leafNodePrint(LeafNode *l);
 LeafNode *leafNodeCreate2M(int t);
 void leafNodeFree2M(LeafNode *l);

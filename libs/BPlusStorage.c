@@ -9,18 +9,25 @@
 
 static char *currentDirectory = NULL;
 
-void bPlusTreeSetCurrentDirectory(const char *directory) {
-    if (currentDirectory) {
+void bPlusTreeSetCurrentDirectory(const char *directory){
+    if (currentDirectory){
         free(currentDirectory);
     }
     currentDirectory = directory ? strdup(directory) : NULL;
 }
 
-const char* bPlusTreeGetCurrentDirectory() {
+const char* bPlusTreeGetCurrentDirectory(){
     return currentDirectory;
 }
 
-char* buildFilePath(const char *directory, const char *filename) {
+void bPlusTreeCleanupCurrentDirectory(){
+    if (currentDirectory){
+        free(currentDirectory);
+        currentDirectory = NULL;
+    }
+}
+
+char* buildFilePath(const char *directory, const char *filename){
     size_t dirLen = strlen(directory);
     size_t fileLen = strlen(filename);
     size_t totalLen = dirLen + fileLen + 2;
@@ -32,12 +39,12 @@ char* buildFilePath(const char *directory, const char *filename) {
     return fullPath;
 }
 
-int directoryExists(const char *path) {
+int directoryExists(const char *path){
     struct stat st;
     return (stat(path, &st) == 0 && S_ISDIR(st.st_mode));
 }
 
-int createDirectory(const char *path) {
+int createDirectory(const char *path){
     if (directoryExists(path)) return 1;
     
     if (mkdir(path, 0755) == 0) return 1;
@@ -47,7 +54,7 @@ int createDirectory(const char *path) {
     return 0;
 }
 
-BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
+BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t){
     if (!directoryPath || t <= 0) return NULL;
     
     BPlusTreeContext *context = (BPlusTreeContext*)malloc(sizeof(BPlusTreeContext));
@@ -56,7 +63,7 @@ BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
     context->directoryPath = strdup(directoryPath);
     context->t = t;
     
-    if (!createDirectory(directoryPath)) {
+    if (!createDirectory(directoryPath)){
         free(context->directoryPath);
         free(context);
         return NULL;
@@ -65,7 +72,7 @@ BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
     bPlusTreeSetCurrentDirectory(directoryPath);
     
     char *indexPath = buildFilePath(directoryPath, "Index.dat");
-    if (!indexPath) {
+    if (!indexPath){
         free(context->directoryPath);
         free(context);
         return NULL;
@@ -74,12 +81,12 @@ BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
     context->indexFilePath = indexPath;
     
     FILE *testFile = fopen(indexPath, "rb");
-    if (testFile) {
+    if (testFile){
         fclose(testFile);
         context->indexFile = fopen(indexPath, "rb+");
-    } else {
+    } else{
         context->indexFile = fopen(indexPath, "wb+");
-        if (context->indexFile) {
+        if (context->indexFile){
             int fileCounter = 0;
             long root = HEADER_SIZE;
             
@@ -93,7 +100,7 @@ BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
         }
     }
     
-    if (!context->indexFile) {
+    if (!context->indexFile){
         free(context->indexFilePath);
         free(context->directoryPath);
         free(context);
@@ -103,9 +110,9 @@ BPlusTreeContext* bPlusTreeLoad(const char *directoryPath, int t) {
     return context;
 }
 
-void bPlusTreeContextFree(BPlusTreeContext *context) {
-    if (context) {
-        if (context->indexFile) {
+void bPlusTreeContextFree(BPlusTreeContext *context){
+    if (context){
+        if (context->indexFile){
             fflush(context->indexFile);
             fclose(context->indexFile);
         }
@@ -124,7 +131,7 @@ char *nameToFile(char *fileName){
     return str;
 }
 
-char *nameToFileInDirectory(char *fileName, const char *directory) {
+char *nameToFileInDirectory(char *fileName, const char *directory){
     char *baseName = nameToFile(fileName);
     if (!baseName) return NULL;
     
@@ -164,7 +171,7 @@ long bPlusTree2MSizeInDisk(int t){
 
 long getRootOffset(FILE *indexFile){
     long root;
-    if(!indexFile) {
+    if(!indexFile){
         printf("getRootOffset: indexFile NULL\n");
         exit(1);
     }

@@ -9,7 +9,7 @@ int hashFromString(char *str) {
 	return sum % DIVIDER;
 }
 
-bool testStringHashCollision(char *str1, char *str2) {
+bool testStringHashCollision(char *str1, char *str2){
 	int hash1 = hashFromString(str1);
 	int hash2 = hashFromString(str2);
 	return hash1 == hash2;

@@ -39,6 +39,7 @@ set(SRC_SOURCES
         src/Main.c
         src/Console.c
         src/Mutation.c
+        src/Questionary.c
         src/models/ChampionshipInfo.c
         src/models/EstandarteAward.c
         src/models/SchoolInfo.c
@@ -51,6 +52,7 @@ set(SRC_SOURCES
 set(SRC_HEADERS
         src/Console.h
         src/Mutation.h
+        src/Questionary.h
         src/models/ChampionshipInfo.h
         src/models/EstandarteAward.h
         src/models/SchoolInfo.h

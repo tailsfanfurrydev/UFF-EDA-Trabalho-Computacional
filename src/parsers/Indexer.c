@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-static void trim(char* str) {
+static void trim(char* str){
     if(!str) return;
     //espaços estupidos atrapalhando meu parser
     char* start = str;
@@ -16,12 +16,12 @@ static void trim(char* str) {
     while(end > start && isspace((unsigned char)*end)) end--;
     end[1] = '\0';
 
-    if(start != str) {
+    if(start != str){
         memmove(str, start, strlen(start) + 1);
     }
 }
 
-static char* buildYearFilePath(const char* baseDataPath, int year) {
+static char* buildYearFilePath(const char* baseDataPath, int year){
     char filename[32];
     snprintf(filename, sizeof(filename), "year-%d.dat", year);
     
@@ -31,16 +31,12 @@ static char* buildYearFilePath(const char* baseDataPath, int year) {
     return path;
 }
 
-static char* buildSchoolFilePath(const char* baseDataPath, const char* schoolName) {
+static char* buildSchoolFilePath(const char* baseDataPath, const char* schoolName){
     char cleanName[256];
     strncpy(cleanName, schoolName, 255);
     cleanName[255] = '\0';
-    
-    // Remove espaços do início e fim
     trim(cleanName);
-    
-    // Substitui espaços internos por underscores
-    for(int i = 0; cleanName[i]; i++) {
+    for(int i = 0; cleanName[i]; i++){
         if(cleanName[i] == ' ') cleanName[i] = '_';
     }
     
@@ -52,13 +48,14 @@ static char* buildSchoolFilePath(const char* baseDataPath, const char* schoolNam
     snprintf(path, len, "%s/SchoolInfo/%s", baseDataPath, filename);
     return path;
 }
-
-static char* buildIndividualFilePath(const char* baseDataPath, const char* personName) {
+static char* buildIndividualFilePath(const char* baseDataPath, const char* personName){
     char cleanName[256];
     strncpy(cleanName, personName, 255);
     cleanName[255] = '\0';
     trim(cleanName);
-    for(int i = 0; cleanName[i]; i++) {
+
+
+    for(int i = 0; cleanName[i]; i++){
         if(cleanName[i] == ' ') cleanName[i] = '_';
     }
     
@@ -71,21 +68,22 @@ static char* buildIndividualFilePath(const char* baseDataPath, const char* perso
     return path;
 }
 
-IndexerContext* indexerCreate(const char* baseDataPath) {
+IndexerContext* indexerCreate(const char* baseDataPath){
     IndexerContext* context = (IndexerContext*)malloc(sizeof(IndexerContext));
     if(!context) return NULL;
-    
     char yearIndexPath[512];
     snprintf(yearIndexPath, sizeof(yearIndexPath), "%s/YearInfo", baseDataPath);
     char schoolIndexPath[512];
     snprintf(schoolIndexPath, sizeof(schoolIndexPath), "%s/SchoolInfo", baseDataPath);
     char individualIndexPath[512];
     snprintf(individualIndexPath, sizeof(individualIndexPath), "%s/IndividualInfo", baseDataPath);
+
+
     context->yearIndex = bPlusTreeLoad(yearIndexPath, 3);
     context->schoolIndex = hashMapM2Load(schoolIndexPath);
     context->individualIndex = hashMapM2Load(individualIndexPath);
     
-    if(!context->yearIndex || !context->schoolIndex || !context->individualIndex) {
+    if(!context->yearIndex || !context->schoolIndex || !context->individualIndex){
         indexerFree(context);
         return NULL;
     }
@@ -93,7 +91,7 @@ IndexerContext* indexerCreate(const char* baseDataPath) {
     return context;
 }
 
-void indexerFree(IndexerContext* context) {
+void indexerFree(IndexerContext* context){
     if(!context) return;
     
     if(context->yearIndex) bPlusTreeContextFree(context->yearIndex);
@@ -103,11 +101,11 @@ void indexerFree(IndexerContext* context) {
     free(context);
 }
 
-int indexerBuildFromParser(IndexerContext* context, ParserContext* parserContext, const char* baseDataPath) {
+int indexerBuildFromParser(IndexerContext* context, ParserContext* parserContext, const char* baseDataPath){
     if(!context || !parserContext || !baseDataPath) return 0;
     
     LinkedList* yearNode = parserContext->yearInfoList;
-    while(yearNode) {
+    while(yearNode){
         YearInfo* yearInfo = (YearInfo*)yearNode->info;
         
         char* yearPath = buildYearFilePath(baseDataPath, yearInfo->year);
@@ -119,7 +117,7 @@ int indexerBuildFromParser(IndexerContext* context, ParserContext* parserContext
     }
     
     LinkedList* schoolNode = parserContext->schoolInfoList;
-    while(schoolNode) {
+    while(schoolNode){
         SchoolInfo* schoolInfo = (SchoolInfo*)schoolNode->info;
         
         char cleanSchoolName[256];
@@ -136,7 +134,7 @@ int indexerBuildFromParser(IndexerContext* context, ParserContext* parserContext
     }
     
     LinkedList* individualNode = parserContext->individualInfoList;
-    while(individualNode) {
+    while(individualNode){
         IndividualInfo* individualInfo = (IndividualInfo*)individualNode->info;
     
         char cleanPersonName[256];
@@ -155,7 +153,7 @@ int indexerBuildFromParser(IndexerContext* context, ParserContext* parserContext
     return 1;
 }
 
-char* indexerSearchYear(IndexerContext* context, int year) {
+char* indexerSearchYear(IndexerContext* context, int year){
     if(!context || !context->yearIndex) return NULL;
     
     char* leafFile = bPlusTreeSearch2M(context->yearIndex->indexFile, year, getRootOffset(context->yearIndex->indexFile));
@@ -167,13 +165,13 @@ char* indexerSearchYear(IndexerContext* context, int year) {
     return buildYearFilePath("data", year);
 }
 
-char* indexerSearchSchool(IndexerContext* context, const char* schoolName) {
+char* indexerSearchSchool(IndexerContext* context, const char* schoolName){
     if(!context || !context->schoolIndex || !schoolName) return NULL;
     
     return hashMapM2Get(context->schoolIndex, schoolName);
 }
 
-char* indexerSearchIndividual(IndexerContext* context, const char* personName) {
+char* indexerSearchIndividual(IndexerContext* context, const char* personName){
     if(!context || !context->individualIndex || !personName) return NULL;
     
     return hashMapM2Get(context->individualIndex, personName);

@@ -32,4 +32,7 @@ bool hashMapM2Contains(HashMapM2Context *context, const char *key);
 int hashMapM2Remove(HashMapM2Context *context, const char *key);
 void hashMapM2PrintAll(HashMapM2Context *context);
 
+typedef void (*HashMapM2IteratorCallback)(const char *key, const char *filePath, void *userData);
+void hashMapM2ForEach(HashMapM2Context *context, HashMapM2IteratorCallback callback, void *userData);
+
 #endif

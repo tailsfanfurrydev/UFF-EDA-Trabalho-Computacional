@@ -22,6 +22,7 @@ void bPlusTreeContextFree(BPlusTreeContext *context);
 
 void bPlusTreeSetCurrentDirectory(const char *directory);
 const char* bPlusTreeGetCurrentDirectory();
+void bPlusTreeCleanupCurrentDirectory();
 
 long getRootOffset(FILE *indexFile);
 int setRootOffset(FILE *indexFile, long rootOffset);

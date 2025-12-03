@@ -1,108 +1,108 @@
 Ano 	Escola campeã 	N.º 	Enredo 	Carnavalesco(a) 	Escola vice-campeã 
-1932	Estação Primeira de Mangueira 	1	Sorrindo ou Na Floresta 	* 	Portela;Para o Ano Sai Melhor [EXTINTA] 
-1933	Estação Primeira de Mangueira 	2	Uma Segunda-feira no Bonfim da Bahia 	Pedro Palheta; Maçu da Mangueira 	Azul e Branco do Salgueiro [EXTINTA] 
-1934	Estação Primeira de Mangueira	3	Divina Dama ou República da Orgia 	Comissão de carnaval	Portela 
+1932	Mangueira 	1	Sorrindo ou Na Floresta 	* 	Portela;Para o Ano Sai Melhor [EXTINTA] 
+1933	Mangueira 	2	Uma Segunda-feira no Bonfim da Bahia 	Pedro Palheta; Maçu da Mangueira 	Azul e Branco do Salgueiro [EXTINTA] 
+1934	Mangueira	3	Divina Dama ou República da Orgia 	Comissão de carnaval	Portela 
 1934	Recreio de Ramos [EXTINTA] 	1	* 	* 	Unidos da Tijuca
-1935	Portela 	1	O Samba Dominando o Mundo 	Antônio Caetano 	Estação Primeira de Mangueira 
-1936	Unidos da Tijuca 	1	Sonhos Delirantes 	* 	Estação Primeira de Mangueira 
+1935	Portela 	1	O Samba Dominando o Mundo 	Antônio Caetano 	Mangueira 
+1936	Unidos da Tijuca 	1	Sonhos Delirantes 	* 	Mangueira 
 1937	Vizinha Faladeira 	1	Uma Só Bandeira 	* 	Portela 
-1939	Portela 	2	Teste ao Samba 	Paulo da Portela 	Estação Primeira de Mangueira 
-1940	Estação Primeira de Mangueira 	4	Prantos, Pretos e Poetas 	* 	Mocidade Louca de São Cristóvão [EXTINTA] 
-1941	Portela 	3	Dez Anos de Glórias 	Paulo da Portela; Lino Manoel dos Reis 	Estação Primeira de Mangueira 
+1939	Portela 	2	Teste ao Samba 	Paulo da Portela 	Mangueira 
+1940	Mangueira 	4	Prantos, Pretos e Poetas 	* 	Mocidade Louca de São Cristóvão [EXTINTA] 
+1941	Portela 	3	Dez Anos de Glórias 	Paulo da Portela; Lino Manoel dos Reis 	Mangueira 
 1942	Portela 	4	A Vida do Samba 	Lino Manoel dos Reis 	Depois Eu Digo [EXTINTA] 
-1943	Portela 	5	Carnaval de Guerra 	Liga da Defesa Nacional 	Estação Primeira de Mangueira 
-1944	Portela 	6	Brasil Glorioso 	Liga da Defesa Nacional 	Estação Primeira de Mangueira 
-1945	Portela 	7	Motivos Patrióticos 	Liga da Defesa Nacional 	Estação Primeira de Mangueira 
-1946	Portela 	8	Alvorada do Novo Mundo 	Lino Manoel dos Reis 	Estação Primeira de Mangueira 
-1947	Portela 	9	Honra ao Mérito 	Euzébio; Lino Manoel dos Reis 	Estação Primeira de Mangueira 
+1943	Portela 	5	Carnaval de Guerra 	Liga da Defesa Nacional 	Mangueira 
+1944	Portela 	6	Brasil Glorioso 	Liga da Defesa Nacional 	Mangueira 
+1945	Portela 	7	Motivos Patrióticos 	Liga da Defesa Nacional 	Mangueira 
+1946	Portela 	8	Alvorada do Novo Mundo 	Lino Manoel dos Reis 	Mangueira 
+1947	Portela 	9	Honra ao Mérito 	Euzébio; Lino Manoel dos Reis 	Mangueira 
 1948	Império Serrano 	1	Homenagem a Antônio Castro Alves 	* 	Unidos da Tijuca 
 1949	Império Serrano	2	Exaltação a Tiradentes 	* 	Azul e Branco do Salgueiro [EXTINTA] 
-1949	Estação Primeira de Mangueira] 	5	Apologia aos Mestres 	* 	Portela
+1949	Mangueira 	5	Apologia aos Mestres 	* 	Portela
 1950	Império Serrano 	3	Batalha Naval do Riachuelo 	* 	Aprendizes de Lucas [EXTINTA] 
-1950	Estação Primeira de Mangueira 	6	Plano SALTE — Saúde, Lavoura, Transporte e Educação 	* 	Portela
+1950	Mangueira 	6	Plano SALTE — Saúde, Lavoura, Transporte e Educação 	* 	Portela
 1950	Prazer da Serrinha [EXTINTA] 	1	* 	* 	Paz e Amor [EXTINTA]; Três Mosqueteiros [EXTINTA]; Depois Eu Digo [EXTINTA]; Unidos da Tamarineira [EXTINTA]; Unidos de Congonhas [EXTINTA]
 1950	Unidos da Capela [EXTINTA] 	1	* 	*	Paz e Amor [EXTINTA]; Três Mosqueteiros [EXTINTA]; Depois Eu Digo [EXTINTA]; Unidos da Tamarineira [EXTINTA]; Unidos de Congonhas [EXTINTA]
 1951	Império Serrano	4	Sessenta e Um Anos de República 	* 	Aprendizes de Lucas [EXTINTA] 
 1951	Portela 	10	A Volta do Filho Pródigo 	Lino Manoel dos Reis 	Três Mosqueteiros [EXTINTA]
 1953	Portela 	11	As Seis Datas Magnas 	Lino Manoel dos Reis 	Império Serrano 
-1954	Estação Primeira de Mangueira 	7	Rio de Janeiro de Ontem e Hoje 	* 	Império Serrano 
-1955	Império Serrano 	5	Exaltação a Caxias 	* 	Estação Primeira de Mangueira 
+1954	Mangueira 	7	Rio de Janeiro de Ontem e Hoje 	* 	Império Serrano 
+1955	Império Serrano 	5	Exaltação a Caxias 	* 	Mangueira 
 1956	Império Serrano 	6	Caçador de Esmeraldas ou Sonhos das Esmeraldas 	* 	Portela 
 1957	Portela 	12	Legados de D. João VI 	Djalma Vogue; Candeia; Joacir 	Império Serrano 
 1958	Portela 	13	Vultos e Efemérides do Brasil 	Djalma Vogue 	Império Serrano 
-1959	Portela 	14	Brasil, Panteon de Glórias 	Djalma Vogue 	Acadêmicos do Salgueiro 
+1959	Portela 	14	Brasil, Panteon de Glórias 	Djalma Vogue 	Salgueiro 
 1960	Portela 	15	Rio, Capital Eterna do Samba ou Rio, Cidade Eterna 	Djalma Vogue 	Aprendizes de Lucas [EXTINTA] 
-1960	Estação Primeira de Mangueira 	8	Glória ao Samba ou Carnaval de Todos os Tempos 	*	Aprendizes de Lucas [EXTINTA] 
-1960	Acadêmicos do Salgueiro 	1	Quilombo dos Palmares 	Fernando Pamplona; Arlindo Rodrigues; Newton de Sá	Aprendizes de Lucas [EXTINTA] 
+1960	Mangueira 	8	Glória ao Samba ou Carnaval de Todos os Tempos 	*	Aprendizes de Lucas [EXTINTA] 
+1960	Salgueiro 	1	Quilombo dos Palmares 	Fernando Pamplona; Arlindo Rodrigues; Newton de Sá	Aprendizes de Lucas [EXTINTA] 
 1960	Unidos da Capela [EXTINTA] 	2	Produtos e Costumes de Nossa Terra 	João Moleque	Aprendizes de Lucas [EXTINTA] 
 1960	Império Serrano 	7	Medalhas e Brasões 	* 	Aprendizes de Lucas [EXTINTA] 
-1961	Estação Primeira de Mangueira 	9	Reminiscências do Rio Antigo 	* 	Acadêmicos do Salgueiro 
+1961	Mangueira 	9	Reminiscências do Rio Antigo 	* 	Salgueiro 
 1962	Portela 	16	Rugendas ou Viagens Pitorescas Através do Brasil 	Nelson de Andrade 	Império Serrano 
-1963	Acadêmicos do Salgueiro 	2	Chica da Silva 	Arlindo Rodrigues 	Estação Primeira de Mangueira 
-1964	Portela 	17	O Segundo Casamento de D. Pedro I 	Nelson de Andrade 	Acadêmicos do Salgueiro 
-1965	Acadêmicos do Salgueiro 	3	História do Carnaval Carioca - Eneida 	Fernando Pamplona; Arlindo Rodrigues 	Império Serrano 
-1966	Portela 	18	Memórias de Um Sargento de Milícias 	Nelson de Andrade 	Estação Primeira de Mangueira 
-1967	Estação Primeira de Mangueira 	10	O Mundo Encantado de Monteiro Lobato 	Júlio Mattos 	Império Serrano 
-1968	Estação Primeira de Mangueira 	11	Samba, Festa de Um Povo 	Júlio Mattos 	Império Serrano 
-1969	Acadêmicos do Salgueiro 	4	Bahia de Todos os Deuses 	Fernando Pamplona; Arlindo Rodrigues 	Estação Primeira de Mangueira 
-1970	Portela 	19	Lendas e Mistérios da Amazônia 	Clóvis Bornay; Arnaldo Pederneiras 	Acadêmicos do Salgueiro 
-1971	Acadêmicos do Salgueiro 	5	Festa Para Um Rei Negro 	Fernando Pamplona; Arlindo Rodrigues; Maria Augusta; Joãsinho Trinta 	Portela 
-1972	Império Serrano 	8	Alô, Alô, Taí Carmem Miranda 	Fernando Pinto 	Estação Primeira de Mangueira
-1973	Estação Primeira de Mangueira 	12	Lendas do Abaeté 	Júlio Mattos 	Império Serrano 
-1974	Acadêmicos do Salgueiro 	6	O Rei de França na Ilha da Assombração 	Joãosinho Trinta; Maria Augusta 	Portela 
-1975	Acadêmicos do Salgueiro 	7	O Segredo das Minas do Rei Salomão 	Joãosinho Trinta 	Estação Primeira de Mangueira 
-1976	Beija-Flor de Nilópolis 	1	Sonhar com Rei dá Leão 	Joãosinho Trinta 	Estação Primeira de Mangueira 
-1977	Beija-Flor de Nilópolis 	2	Vovó e o Rei da Saturnália na Corte Egípciana 	Joãosinho Trinta 	Portela 
-1978	Beija-Flor de Nilópolis 	3	A Criação do Mundo na Tradição Nagô 	Joãosinho Trinta 	Estação Primeira de Mangueira 
-1979	Mocidade Independente de Padre Miguel 	1	O Descobrimento do Brasil 	Arlindo Rodrigues 	Beija-Flor de Nilópolis 
-1980	Beija-Flor de Nilópolis 	4	O Sol da Meia-noite, Uma Viagem ao País das Maravilhas 	Joãosinho Trinta 	Mocidade Independente de Padre Miguel; União da Ilha do Governador; Unidos de Vila Isabel 
-1980	Imperatriz Leopoldinense 	1	O Quê Que a Bahia Tem? 	Arlindo Rodrigues	*
+1963	Salgueiro 	2	Chica da Silva 	Arlindo Rodrigues 	Mangueira 
+1964	Portela 	17	O Segundo Casamento de D. Pedro I 	Nelson de Andrade 	Salgueiro 
+1965	Salgueiro 	3	História do Carnaval Carioca - Eneida 	Fernando Pamplona; Arlindo Rodrigues 	Império Serrano 
+1966	Portela 	18	Memórias de Um Sargento de Milícias 	Nelson de Andrade 	Mangueira 
+1967	Mangueira 	10	O Mundo Encantado de Monteiro Lobato 	Júlio Mattos 	Império Serrano 
+1968	Mangueira 	11	Samba, Festa de Um Povo 	Júlio Mattos 	Império Serrano 
+1969	Salgueiro 	4	Bahia de Todos os Deuses 	Fernando Pamplona; Arlindo Rodrigues 	Mangueira 
+1970	Portela 	19	Lendas e Mistérios da Amazônia 	Clóvis Bornay; Arnaldo Pederneiras 	Salgueiro 
+1971	Salgueiro 	5	Festa Para Um Rei Negro 	Fernando Pamplona; Arlindo Rodrigues; Maria Augusta; Joãsinho Trinta 	Portela 
+1972	Império Serrano 	8	Alô, Alô, Taí Carmem Miranda 	Fernando Pinto 	Mangueira
+1973	Mangueira 	12	Lendas do Abaeté 	Júlio Mattos 	Império Serrano 
+1974	Salgueiro 	6	O Rei de França na Ilha da Assombração 	Joãosinho Trinta; Maria Augusta 	Portela 
+1975	Salgueiro 	7	O Segredo das Minas do Rei Salomão 	Joãosinho Trinta 	Mangueira 
+1976	Beija-Flor 	1	Sonhar com Rei dá Leão 	Joãosinho Trinta 	Mangueira 
+1977	Beija-Flor 	2	Vovó e o Rei da Saturnália na Corte Egípciana 	Joãosinho Trinta 	Portela 
+1978	Beija-Flor 	3	A Criação do Mundo na Tradição Nagô 	Joãosinho Trinta 	Mangueira 
+1979	Mocidade 	1	O Descobrimento do Brasil 	Arlindo Rodrigues 	Beija-Flor 
+1980	Beija-Flor 	4	O Sol da Meia-noite, Uma Viagem ao País das Maravilhas 	Joãosinho Trinta 	Mocidade; União da Ilha; Vila Isabel 
+1980	Imperatriz 	1	O Quê Que a Bahia Tem? 	Arlindo Rodrigues	*
 1980	Portela 	20	Hoje tem Marmelada! 	Viriato Ferreira	*
-1981	Imperatriz Leopoldinense 	2	O Teu Cabelo Não Nega 	Arlindo Rodrigues 	Beija-Flor de Nilópolis 
+1981	Imperatriz 	2	O Teu Cabelo Não Nega 	Arlindo Rodrigues 	Beija-Flor 
 1982	Império Serrano 	9	Bum Bum Paticumbum Prugurundum 	Rosa Magalhães; Lícia Lacerda 	Portela 
-1983	Beija-Flor de Nilópolis 	5	A Grande Constelação das Estrelas Negras 	Joãosinho Trinta 	Portela 
+1983	Beija-Flor 	5	A Grande Constelação das Estrelas Negras 	Joãosinho Trinta 	Portela 
 1984	Portela	21	Contos de Areia 	Edmundo Braga; Paulino Espírito Santo 	Império Serrano
-1984	Estação Primeira de Mangueira	13	Yes, Nós Temos Braguinha 	Max Lopes 	Mocidade Independente de Padre Miguel
-1984	Estação Primeira de Mangueira	14	Portela	Max Lopes 	Portela 
-1985	Mocidade Independente de Padre Miguel 	2	Ziriguidum 2001 - Carnaval nas Estrelas 	Fernando Pinto 	Beija-Flor de Nilópolis 
-1986	Estação Primeira de Mangueira 	15	Caymmi Mostra ao Mundo o que a Bahia e a Mangueira Têm 	Júlio Mattos 	Beija-Flor de Nilópolis 
-1987	Estação Primeira de Mangueira 	16	No Reino das Palavras, Carlos Drummond de Andrade 	Júlio Mattos 	Mocidade Independente de Padre Miguel 
-1988	Unidos de Vila Isabel 	1	Kizomba, Festa da Raça 	Paulo César Cardoso; Milton Siqueira; Ilvamar Magalhães 	Estação Primeira de Mangueira 
-1989	Imperatriz Leopoldinense 	3	Liberdade, Liberdade, Abre as Asas Sobre Nós! 	Max Lopes 	Beija-Flor de Nilópolis 
-1990	Mocidade Independente de Padre Miguel 	3	Vira, Virou, a Mocidade Chegou 	Renato Lage; Lilian Rabello 	Beija-Flor de Nilópolis 
-1991	Mocidade Independente de Padre Miguel 	4	Chuê, Chuá, as Águas Vão Rolar 	Renato Lage; Lilian Rabello 	Acadêmicos do Salgueiro 
-1992	Estácio de Sá 	1	Paulicéia Desvairada - 70 Anos de Modernismo 	Mário Monteiro; Chico Spinoza 	Mocidade Independente de Padre Miguel 
-1993	Acadêmicos do Salgueiro 	8	Peguei Um Ita no Norte 	Mario Borriello 	Imperatriz Leopoldinense 
-1994	Imperatriz Leopoldinense 	4	Catarina de Médicis na Corte dos Tupinambôs e dos Tabajéres 	Rosa Magalhães 	Acadêmicos do Salgueiro 
-1995	Imperatriz Leopoldinense 	5	Mais Vale Um Jegue que me Carregue, que Um Camelo que Me Derrube, Lá no Ceará 	Rosa Magalhães 	Portela 
-1996	Mocidade Independente de Padre Miguel 	5	Criador e Criatura 	Renato Lage 	Imperatriz Leopoldinense 
-1997	Unidos do Viradouro 	1	Trevas! Luz! A Explosão do Universo 	Joãosinho Trinta 	Mocidade Independente de Padre Miguel 
-1998	Beija-Flor de Nilópolis 	6	Pará, O Mundo Místico dos Caruanas, nas Águas do Patu-anu 	Cid Carvalho; Amarildo de Mello; Anderson Müller; Fran Sérgio; Ubiratan Silva; Nelson Ricardo; Paulo Führo; Victor Santos 	*
-1998	Estação Primeira de Mangueira 	17	Chico Buarque da Mangueira 	Alexandre Louzada	*
-1999	Imperatriz Leopoldinense 	6	Brasil, Mostra a Sua Cara em... Theatrum Rerum Naturalium Brasiliae 	Rosa Magalhães 	Beija-Flor de Nilópolis 
-2000	Imperatriz Leopoldinense 	7	Quem Descobriu o Brasil Foi Seu Cabral, no Dia 22 de Abril, Dois Meses Depois do Carnaval 	Rosa Magalhães 	Beija-Flor de Nilópolis 
-2001	Imperatriz Leopoldinense 	8	Cana-caiana, Cana Roxa, Cana Fita, Cana Preta, Amarela, Pernambuco... Quero Vê Descê o Suco na Pancada do Ganzá 	Rosa Magalhães 	Beija-Flor de Nilópolis 
-2002	Estação Primeira de Mangueira 	18	Brazil com Z é pra Cabra da Peste, Brasil com S é Nação do Nordeste 	Max Lopes 	Beija-Flor de Nilópolis 
-2003	Beija-Flor de Nilópolis 	7	O Povo Conta a Sua História: Saco Vazio Não Para em Pé - A Mão que Faz a Guerra, Faz a Paz	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Estação Primeira de Mangueira 
-2004	Beija-Flor de Nilópolis 	8	Manôa, Manaus, Amazônia, Terra Santa: Alimenta o Corpo, Equilibra a Alma e Transmite a Paz 	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Unidos da Tijuca 
-2005	Beija-Flor de Nilópolis 	9	O Vento Corta as Terras dos Pampas. Em Nome do Pai, do Filho e do Espírito Guarani. Sete Povos na Fé e na Dor... Sete Missões de Amor 	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Unidos da Tijuca 
-2006	Unidos de Vila Isabel 	2	Soy Loco por Ti, América - A Vila Canta a Latinidade 	Alexandre Louzada 	Acadêmicos do Grande Rio 
-2007	Beija-Flor de Nilópolis 	10	Áfricas - Do Berço Real à Corte Brasiliana 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Shangai 	Acadêmicos do Grande Rio 
-2008	Beija-Flor de Nilópolis 	11	Macapaba: Equinócio Solar, Viagens Fantásticas ao Meio do Mundo 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Shangai 	Acadêmicos do Salgueiro 
-2009	Acadêmicos do Salgueiro 	9	Tambor 	Renato Lage 	Beija-Flor de Nilópolis 
-2010	Unidos da Tijuca 	2	É Segredo! 	Paulo Barros 	Acadêmicos do Grande Rio 
-2011	Beija-Flor de Nilópolis 	12	A Simplicidade de um Rei 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Victor Santos 	Unidos da Tijuca 
-2012	Unidos da Tijuca 	3	O Dia em que Toda a Realeza Desembarcou na Avenida para Coroar o Rei Luiz do Sertão 	Paulo Barros 	Acadêmicos do Salgueiro 
-2013	Unidos de Vila Isabel 	3	A Vila Canta o Brasil, Celeiro do Mundo - Água no Feijão que Chegou Mais Um	Rosa Magalhães 	Beija-Flor de Nilópolis 
-2014	Unidos da Tijuca 	4	Acelera, Tijuca! 	Paulo Barros 	Acadêmicos do Salgueiro 
-2015	Beija-Flor de Nilópolis 	13	Um Griô Conta a História: Um Olhar sobre a África e o Despontar da Guiné Equatorial. Caminhemos sobre a Trilha de Nossa Felicidade 	Laíla; Fran Sérgio; Ubiratan Silva; Victor Santos; André Cezari; Bianca Behrends; Cláudio Russo 	Acadêmicos do Salgueiro 
-2016	Estação Primeira de Mangueira 	19	Maria Bethânia: A Menina dos Olhos de Oyá 	Leandro Vieira 	Unidos da Tijuca 
+1984	Mangueira	13	Yes, Nós Temos Braguinha 	Max Lopes 	Mocidade
+1984	Mangueira	14	Portela	Max Lopes 	Portela 
+1985	Mocidade 	2	Ziriguidum 2001 - Carnaval nas Estrelas 	Fernando Pinto 	Beija-Flor 
+1986	Mangueira 	15	Caymmi Mostra ao Mundo o que a Bahia e a Mangueira Têm 	Júlio Mattos 	Beija-Flor 
+1987	Mangueira 	16	No Reino das Palavras, Carlos Drummond de Andrade 	Júlio Mattos 	Mocidade 
+1988	Vila Isabel 	1	Kizomba, Festa da Raça 	Paulo César Cardoso; Milton Siqueira; Ilvamar Magalhães 	Mangueira 
+1989	Imperatriz 	3	Liberdade, Liberdade, Abre as Asas Sobre Nós! 	Max Lopes 	Beija-Flor 
+1990	Mocidade 	3	Vira, Virou, a Mocidade Chegou 	Renato Lage; Lilian Rabello 	Beija-Flor 
+1991	Mocidade 	4	Chuê, Chuá, as Águas Vão Rolar 	Renato Lage; Lilian Rabello 	Salgueiro 
+1992	Estácio de Sá 	1	Paulicéia Desvairada - 70 Anos de Modernismo 	Mário Monteiro; Chico Spinoza 	Mocidade 
+1993	Salgueiro 	8	Peguei Um Ita no Norte 	Mario Borriello 	Imperatriz 
+1994	Imperatriz 	4	Catarina de Médicis na Corte dos Tupinambôs e dos Tabajéres 	Rosa Magalhães 	Salgueiro 
+1995	Imperatriz 	5	Mais Vale Um Jegue que me Carregue, que Um Camelo que Me Derrube, Lá no Ceará 	Rosa Magalhães 	Portela 
+1996	Mocidade 	5	Criador e Criatura 	Renato Lage 	Imperatriz 
+1997	Viradouro 	1	Trevas! Luz! A Explosão do Universo 	Joãosinho Trinta 	Mocidade 
+1998	Beija-Flor 	6	Pará, O Mundo Místico dos Caruanas, nas Águas do Patu-anu 	Cid Carvalho; Amarildo de Mello; Anderson Müller; Fran Sérgio; Ubiratan Silva; Nelson Ricardo; Paulo Führo; Victor Santos 	*
+1998	Mangueira 	17	Chico Buarque da Mangueira 	Alexandre Louzada	*
+1999	Imperatriz 	6	Brasil, Mostra a Sua Cara em... Theatrum Rerum Naturalium Brasiliae 	Rosa Magalhães 	Beija-Flor 
+2000	Imperatriz 	7	Quem Descobriu o Brasil Foi Seu Cabral, no Dia 22 de Abril, Dois Meses Depois do Carnaval 	Rosa Magalhães 	Beija-Flor 
+2001	Imperatriz 	8	Cana-caiana, Cana Roxa, Cana Fita, Cana Preta, Amarela, Pernambuco... Quero Vê Descê o Suco na Pancada do Ganzá 	Rosa Magalhães 	Beija-Flor 
+2002	Mangueira 	18	Brazil com Z é pra Cabra da Peste, Brasil com S é Nação do Nordeste 	Max Lopes 	Beija-Flor 
+2003	Beija-Flor 	7	O Povo Conta a Sua História: Saco Vazio Não Para em Pé - A Mão que Faz a Guerra, Faz a Paz	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Mangueira 
+2004	Beija-Flor 	8	Manôa, Manaus, Amazônia, Terra Santa: Alimenta o Corpo, Equilibra a Alma e Transmite a Paz 	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Unidos da Tijuca 
+2005	Beija-Flor 	9	O Vento Corta as Terras dos Pampas. Em Nome do Pai, do Filho e do Espírito Guarani. Sete Povos na Fé e na Dor... Sete Missões de Amor 	Laíla; Cid Carvalho; Fran Sérgio; Ubiratan Silva; Shangai 	Unidos da Tijuca 
+2006	Vila Isabel 	2	Soy Loco por Ti, América - A Vila Canta a Latinidade 	Alexandre Louzada 	Grande Rio 
+2007	Beija-Flor 	10	Áfricas - Do Berço Real à Corte Brasiliana 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Shangai 	Grande Rio 
+2008	Beija-Flor 	11	Macapaba: Equinócio Solar, Viagens Fantásticas ao Meio do Mundo 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Shangai 	Salgueiro 
+2009	Salgueiro 	9	Tambor 	Renato Lage 	Beija-Flor 
+2010	Unidos da Tijuca 	2	É Segredo! 	Paulo Barros 	Grande Rio 
+2011	Beija-Flor 	12	A Simplicidade de um Rei 	Laíla; Alexandre Louzada; Fran Sérgio; Ubiratan Silva; Victor Santos 	Unidos da Tijuca 
+2012	Unidos da Tijuca 	3	O Dia em que Toda a Realeza Desembarcou na Avenida para Coroar o Rei Luiz do Sertão 	Paulo Barros 	Salgueiro 
+2013	Vila Isabel 	3	A Vila Canta o Brasil, Celeiro do Mundo - Água no Feijão que Chegou Mais Um	Rosa Magalhães 	Beija-Flor 
+2014	Unidos da Tijuca 	4	Acelera, Tijuca! 	Paulo Barros 	Salgueiro 
+2015	Beija-Flor 	13	Um Griô Conta a História: Um Olhar sobre a África e o Despontar da Guiné Equatorial. Caminhemos sobre a Trilha de Nossa Felicidade 	Laíla; Fran Sérgio; Ubiratan Silva; Victor Santos; André Cezari; Bianca Behrends; Cláudio Russo 	Salgueiro 
+2016	Mangueira 	19	Maria Bethânia: A Menina dos Olhos de Oyá 	Leandro Vieira 	Unidos da Tijuca 
 2017	Portela 	22	Quem Nunca Sentiu o Corpo Arrepiar ao Ver Esse Rio Passar? 	Paulo Barros 	*
-2017	Mocidade Independente de Padre Miguel 	6	As Mil e Uma Noites de Uma 'Mocidade' pra Lá de Marrakesh 	Alexandre Louzada	*
-2018	Beija-Flor de Nilópolis 	14	Monstro É Aquele que Não Sabe Amar. Os Filhos Abandonados da Pátria que os Pariu 	Laíla; Cid Carvalho; Victor Santos; Bianca Behrends; Rodrigo Pacheco; Léo Mídia 	Paraíso do Tuiuti 
-2019	Estação Primeira de Mangueira 	20	História pra Ninar Gente Grande 	Leandro Vieira 	Unidos do Viradouro 
-2020	Unidos do Viradouro 	2	Viradouro de Alma Lavada 	Marcus Ferreira; Tarcisio Zanon 	Acadêmicos do Grande Rio 
-2022	Acadêmicos do Grande Rio 	1	Fala, Majeté! Sete Chaves de Exu 	Gabriel Haddad; Leonardo Bora 	Beija-Flor de Nilópolis 
-2023	Imperatriz Leopoldinense 	9	O Aperreio do Cabra Que o Excomungado Tratou com Má-querença e o Santíssimo Não Deu Guarida 	Leandro Vieira 	Unidos do Viradouro 
-2024	Unidos do Viradouro 	3	Arroboboi, Dangbé 	Tarcisio Zanon 	Imperatriz Leopoldinense 
-2025	Beija-Flor de Nilópolis 	15	Laíla de Todos os Santos, Laíla de Todos os Sambas 	João Vitor Araújo 	Acadêmicos do Grande Rio
+2017	Mocidade 	6	As Mil e Uma Noites de Uma 'Mocidade' pra Lá de Marrakesh 	Alexandre Louzada	*
+2018	Beija-Flor 	14	Monstro É Aquele que Não Sabe Amar. Os Filhos Abandonados da Pátria que os Pariu 	Laíla; Cid Carvalho; Victor Santos; Bianca Behrends; Rodrigo Pacheco; Léo Mídia 	Paraíso do Tuiuti 
+2019	Mangueira 	20	História pra Ninar Gente Grande 	Leandro Vieira 	Viradouro 
+2020	Viradouro 	2	Viradouro de Alma Lavada 	Marcus Ferreira; Tarcisio Zanon 	Grande Rio 
+2022	Grande Rio 	1	Fala, Majeté! Sete Chaves de Exu 	Gabriel Haddad; Leonardo Bora 	Beija-Flor 
+2023	Imperatriz 	9	O Aperreio do Cabra Que o Excomungado Tratou com Má-querença e o Santíssimo Não Deu Guarida 	Leandro Vieira 	Viradouro 
+2024	Viradouro 	3	Arroboboi, Dangbé 	Tarcisio Zanon 	Imperatriz 
+2025	Beija-Flor 	15	Laíla de Todos os Santos, Laíla de Todos os Sambas 	João Vitor Araújo 	Grande Rio

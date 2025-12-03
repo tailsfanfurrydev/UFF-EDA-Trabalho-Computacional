@@ -4,6 +4,7 @@
 #include "parsers/Indexer.h"
 #include "parsers/Parser.h"
 #include "Console.h"
+#include "../libs/BPlusStorage.h"
 
 static IndexerContext* globalIndexer = NULL;
 
@@ -61,6 +62,7 @@ void freeAll() {
         indexerFree(globalIndexer);
         globalIndexer = NULL;
     }
+    bPlusTreeCleanupCurrentDirectory();
 }
 
 int main(int argc, char *argv[]) {
